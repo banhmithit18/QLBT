@@ -10,10 +10,10 @@ public class CreateTable extends JScrollPane {
     // table = ten bang
     // columnName = ten cac cot
     // query = sql query
-    public JScrollPane table(String table, String[] columnName, String query) {
+    public JScrollPane table(String[] columnName, String query, Dimension d) {
         DBConnection db = new DBConnection();
         // lay so hang + so cot bang muon ve
-        int row = db.getRowCount(table);
+        int row = db.getRowCount(query);
         // lay so cot muon ve
         int column = columnName.length;
         // tao panel tong chua panelheader va paneldata
@@ -60,8 +60,10 @@ public class CreateTable extends JScrollPane {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
         c.gridx = 0;
+        pnlheader.setPreferredSize(d);
         panel.add(pnlheader, c);
         c.gridy = 1;
+        pnlData.setPreferredSize(d);
         panel.add(pnlData, c);
         JScrollPane sp = new JScrollPane(panel);
         return sp;
