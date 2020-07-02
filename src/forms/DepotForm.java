@@ -1,5 +1,6 @@
 package forms;
 
+import models.entities.TableType;
 import utils.ChangePosition;
 import utils.setUIFont;
 
@@ -54,37 +55,7 @@ public class DepotForm extends JDialog {
 
         JButton btnSearch = new JButton("Search");
         btnSearch.setBounds(120, 80, 120, 25);
-        btnSearch.addActionListener(e -> {
-            int position = 0;
-            int index = boxSearch.getSelectedIndex();
-            String strSearch = tfSearch.getText();
-            int row = CreateTable.row;
-            int column = 0;
-            if (index == 0) {
-                for (JPanel item : CreateTable.pnlData
-                ) {
-                    item.show();
-                }
-            } else {
 
-                for (int i = 1; i <= row; i++) {
-                    if (!CreateTable.labels[index + column].getText().matches(".*" + strSearch + ".*")) {
-                        CreateTable.pnlData[i - 1].hide();
-                    } else {
-                        CreateTable.pnlData[i - 1].show();
-                        ChangePosition c = new ChangePosition();
-                        c.swap(CreateTable.pnlAllData, position, i - 1);
-                        position++;
-                    }
-
-                    column += CreateTable.column;
-                }
-                CreateTable.pnlAllData.validate();
-                CreateTable.pnlAllData.repaint();
-            }
-
-        });
-        pnlSearch.add(btnSearch);
         //add JPanel body
         JPanel pnlBody = new JPanel();
         pnlBody.setLayout(new GridLayout(1, 0));
@@ -94,7 +65,46 @@ public class DepotForm extends JDialog {
                 "from depot join product on  depot.productid = product.productid\n" +
                 "join supplier on product.supplierid = supplier.supplierid";
         Dimension d = new Dimension(164, 20);
-        JScrollPane sp = new CreateTable().table("Depot", columnname, query, d, true);
+        Table t = TableFactory.getTable(TableType.depot);
+        JScrollPane sp = t.table("depot", columnname, query, d, true);
+        ;
+        //tao su kien search
+        btnSearch.addActionListener(e -> {
+            ChangePosition c = new ChangePosition();
+            int position = 0;
+            int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
+            String strSearch = tfSearch.getText(); // lay text trong text field
+            int row = TableDepot.row; // lay so hang
+            int column = 0;
+            if (index == 0 ) // tuong duong voi All trong boxSearch
+            {
+                for (JPanel item : TableDepot.pnlData
+                ) {
+                    item.show();
+                }
+            } else {
+                for (int i = 1; i <= row; i++) {
+                    if (TableDepot.labels[index + column].getText().matches(".*" + strSearch + ".*"))
+                    {
+                        TableDepot.pnlData[i - 1].show();
+                        for (int secondIndex = 0; secondIndex < TableDepot.pnlAllData.getComponentCount(); secondIndex++) {
+                            if (TableDepot.pnlAllData.getComponent(secondIndex) == (TableDepot.pnlData[i-1])) {
+                                c.swap(TableDepot.pnlAllData, position, secondIndex);
+                                position++;
+                            }
+                        }
+                    } else {
+                        TableDepot.pnlData[i - 1].hide();
+                    }
+                    column += TableDepot.column;
+                }
+                //redraw lai panel
+                TableDepot.pnlAllData.revalidate();
+                TableDepot.pnlAllData.repaint();
+            }
+
+        });
+        pnlSearch.add(btnSearch);
         pnlBody.add(sp);
 
         //add 2 panel to box
