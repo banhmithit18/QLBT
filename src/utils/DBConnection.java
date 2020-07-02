@@ -7,13 +7,12 @@ import java.util.ArrayList;
 public class DBConnection<T> {
     private String urlConnection = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
     /// lay so dong
-    public int getRowCount(String query) {
+    public int getRowCount(String table) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {
             int row = 0;
-            String queryIn = query.substring(8);
-            String queryOut = "Select count(*) "+queryIn;
+            String query = "Select count(*) from "+table;
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(queryOut);
+            ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 row = rs.getInt(1);
             }
