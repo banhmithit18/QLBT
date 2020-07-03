@@ -51,7 +51,9 @@ public class DepotForm extends JDialog {
 
         JButton btnImport = new JButton("Import");
         btnImport.setBounds(500,40,80,25);
-        btnImport.addActionListener(e -> {});
+        btnImport.addActionListener(e -> {
+            ImportForm im = new ImportForm();
+        });
         pnlHead.add(btnImport);
 
         //add JPanel body

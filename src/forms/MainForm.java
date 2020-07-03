@@ -5,7 +5,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
 
-public class MainForm extends JFrame {
+public class  MainForm extends JFrame {
     JPanel contentPane;
     public MainForm(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
