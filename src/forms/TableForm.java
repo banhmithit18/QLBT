@@ -9,11 +9,11 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public abstract class TableForm {
-    public static JLabel[] labels, labelshead;
-    public static JPanel[] pnlData;
-    public static JButton[] btnEdit;
-    public static int row, column;
-    public static JPanel pnlAllData;
+    protected JLabel[] labels, labelshead;
+    protected   JPanel[] pnlData;
+    protected   JButton[] btnEdit;
+    protected   int row, column;
+    protected   JPanel pnlAllData;
     public JScrollPane table(String table, String[] columnName, String query, Dimension d, boolean editable) {
         DBConnection db = new DBConnection();
         // lay so hang + so cot bang muon ve
@@ -99,6 +99,35 @@ public abstract class TableForm {
         JScrollPane sp = new JScrollPane(panel);
         return sp;
     }
+
+    public JLabel[] getLabels() {
+        return labels;
+    }
+
+    public JLabel[] getLabelshead() {
+        return labelshead;
+    }
+
+    public JPanel[] getPnlData() {
+        return pnlData;
+    }
+
+    public JButton[] getBtnEdit() {
+        return btnEdit;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public JPanel getPnlAllData() {
+        return pnlAllData;
+    }
+
     abstract void ActionEvent(ActionEvent e);
 
 }

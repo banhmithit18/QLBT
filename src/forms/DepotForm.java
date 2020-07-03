@@ -1,6 +1,5 @@
 package forms;
 
-import models.entities.TableType;
 import utils.ChangePosition;
 import utils.setUIFont;
 
@@ -38,23 +37,22 @@ public class DepotForm extends JDialog {
 
         //add component to panel head
 
-        JPanel pnlSearch = new JPanel();
-        pnlSearch.setToolTipText("Search");
-        pnlSearch.setLayout(null);
-        pnlSearch.setBounds(10, 10, 400, 130);
-        pnlHead.add(pnlSearch);
-
         JTextField tfSearch = new JTextField();
         tfSearch.setBounds(10, 40, 200, 25);
-        pnlSearch.add(tfSearch);
+        pnlHead.add(tfSearch);
 
         String[] boxColumn = {"All", "Name", "Content", "Quantity", "Price", "Supplier"};
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
-        pnlSearch.add(boxSearch);
+        pnlHead.add(boxSearch);
 
         JButton btnSearch = new JButton("Search");
         btnSearch.setBounds(120, 80, 120, 25);
+
+        JButton btnImport = new JButton("Import");
+        btnImport.setBounds(500,40,80,25);
+        btnImport.addActionListener(e -> {});
+        pnlHead.add(btnImport);
 
         //add JPanel body
         JPanel pnlBody = new JPanel();
@@ -65,8 +63,8 @@ public class DepotForm extends JDialog {
                 "from depot join product on  depot.productid = product.productid\n" +
                 "join supplier on product.supplierid = supplier.supplierid";
         Dimension d = new Dimension(164, 20);
-        Table t = TableFactory.getTable(TableType.depot);
-        JScrollPane sp = t.table("depot", columnname, query, d, true);
+        TableDepot tp = new TableDepot();
+        JScrollPane sp = tp.table("depot", columnname, query, d, true);
         ;
         //tao su kien search
         btnSearch.addActionListener(e -> {
@@ -74,37 +72,37 @@ public class DepotForm extends JDialog {
             int position = 0;
             int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
             String strSearch = tfSearch.getText(); // lay text trong text field
-            int row = TableDepot.row; // lay so hang
+            int row = tp.row; // lay so hang
             int column = 0;
             if (index == 0 ) // tuong duong voi All trong boxSearch
             {
-                for (JPanel item : TableDepot.pnlData
+                for (JPanel item : tp.pnlData
                 ) {
                     item.show();
                 }
             } else {
                 for (int i = 1; i <= row; i++) {
-                    if (TableDepot.labels[index + column].getText().matches(".*" + strSearch + ".*"))
+                    if (tp.labels[index + column].getText().matches(".*" + strSearch + ".*"))
                     {
-                        TableDepot.pnlData[i - 1].show();
-                        for (int secondIndex = 0; secondIndex < TableDepot.pnlAllData.getComponentCount(); secondIndex++) {
-                            if (TableDepot.pnlAllData.getComponent(secondIndex) == (TableDepot.pnlData[i-1])) {
-                                c.swap(TableDepot.pnlAllData, position, secondIndex);
+                        tp.pnlData[i - 1].show();
+                        for (int secondIndex = 0; secondIndex < tp.pnlAllData.getComponentCount(); secondIndex++) {
+                            if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData[i-1])) {
+                                c.swap(tp.pnlAllData, position, secondIndex);
                                 position++;
                             }
                         }
                     } else {
-                        TableDepot.pnlData[i - 1].hide();
+                        tp.pnlData[i - 1].hide();
                     }
-                    column += TableDepot.column;
+                    column += tp.column;
                 }
                 //redraw lai panel
-                TableDepot.pnlAllData.revalidate();
-                TableDepot.pnlAllData.repaint();
+                tp.pnlAllData.revalidate();
+                tp.pnlAllData.repaint();
             }
 
         });
-        pnlSearch.add(btnSearch);
+        pnlHead.add(btnSearch);
         pnlBody.add(sp);
 
         //add 2 panel to box

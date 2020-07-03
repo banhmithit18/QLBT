@@ -10,7 +10,7 @@ public class DBConnection<T> {
     public int getRowCount(String table) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {
             int row = 0;
-            String query = "Select count(*) from "+table;
+            String query = "Select count(*) from " + table;
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
@@ -21,6 +21,24 @@ public class DBConnection<T> {
             e.printStackTrace();
         }
         return 0;
+    }
+    public String getComboboxString (String query)
+    {
+        try(Connection con = DriverManager.getConnection(urlConnection))
+        {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while (rs.next()) {
+                strReturn += rs.getString(1) + ",";
+            }
+            strReturn = strReturn.substring(0, strReturn.length() - 1); //loai bo dau phay cuoi
+            return strReturn;
+
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return null;
     }
     public boolean check(String query){
         try (Connection con = DriverManager.getConnection(urlConnection)){ ;
