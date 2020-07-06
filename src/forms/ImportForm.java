@@ -1,6 +1,7 @@
 package forms;
 
 import models.entities.Import;
+import models.entities.depot;
 import utils.DBConnection;
 import utils.setUIFont;
 
@@ -9,11 +10,14 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 public class ImportForm extends JDialog {
+    protected int quantity;
+    protected String price;
+    protected boolean checkCrt = false ;
+    protected String productName;
+    protected static JComboBox boxProduct;
     public ImportForm() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setModal(true);
@@ -30,7 +34,7 @@ public class ImportForm extends JDialog {
 
         DBConnection db = new DBConnection();
         String[] comboboxArr = db.getComboboxString("select productid from product").split(",");
-        JComboBox boxProduct = new JComboBox(comboboxArr);
+        boxProduct = new JComboBox(comboboxArr);
         boxProduct.setBounds(110, 10, 180, 25);
         ComboboxDecorator.decorate(boxProduct, true);
         add(boxProduct);
@@ -95,10 +99,10 @@ public class ImportForm extends JDialog {
         btnCreate.addActionListener(e -> {
             String product = boxProduct.getSelectedItem().toString();
             int supplier = db.getID("Select supplierid from supplier where suppliername ='"+boxSupplier.getSelectedItem().toString()+"'");
-            String price = tfPrice.getText();
-            String quantity = tfQuantity.getText();
+            price = tfPrice.getText();
+            String quantityStr = tfQuantity.getText();
 
-            if(price.equals("")|| quantity.equals("")||supplier == 0)
+            if(price.equals("")|| quantityStr.equals(""))
             {
 
                 JOptionPane.showMessageDialog(rootPane,"Please enter all required information");
@@ -108,21 +112,97 @@ public class ImportForm extends JDialog {
                 if(price.matches("^([+-]?\\d*\\.?\\d*)$"));
                 {
                     try {
+                        quantity = Integer.parseInt(quantityStr);
+                        int check = 0;
                         float p = Float.valueOf(price);
                         Import imp = new Import();
-                        imp.setProductid(product);
-                        imp.setSupplierid(supplier);
-                        imp.setQuantity(Integer.valueOf(quantity));
-                        imp.setPrice(p);
-                        imp.setDate(TimeStampConvert.getTimeStamp());
-                        String [] unitPart = boxUnit.getSelectedItem().toString().split(" ");
-                        imp.setUnit(db.getID("Select unitid from unit where unitname ='"+unitPart[1]+"' and unitconvertvalue ="+unitPart[3]+" and unitconvertname ='"+unitPart[4]+"'"));
-                        imp.setEmployeeid(1);
-                        if(db.Create(imp))
+                        if(db.check("select productid from product where productid ='"+product+"'")) {
+                            imp.setProductid(product);
+                            check++;
+                        }
+                        else
                         {
-                            JOptionPane.showMessageDialog(rootPane,"Create successfully");
-                            tfPrice.setText(null);
-                            tfQuantity.setText(null);
+                            JOptionPane.showMessageDialog(rootPane,"Could not find product");
+                        }
+                        if (db.check("select supplierid from supplier where supplierid = "+supplier)) {
+                            imp.setSupplierid(supplier);
+                            check++;
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(rootPane,"Could not find supplier");
+                        }
+                        if(check == 2) {
+                            imp.setQuantity(quantity);
+                            imp.setPrice(p);
+                            imp.setDate(TimeStampConvert.getTimeStamp());
+                            String[] unitPart = boxUnit.getSelectedItem().toString().split(" ");
+                            imp.setUnit(db.getID("Select unitid from unit where unitname =N'" + unitPart[1] + "' and unitconvertvalue =" + unitPart[3] + " and unitconvertname =N'" + unitPart[4] + "'"));
+                            imp.setEmployeeid(1);
+                            if (db.Create(imp)) {
+                                int realQuantity = quantity * Integer.parseInt(unitPart[3]);
+                                depot d = new depot(product,realQuantity,p);
+                                db.Create(d);
+                                checkCrt = true;
+                                boolean checkAdd = true;
+                                JOptionPane.showMessageDialog(rootPane, "Create successfully");
+                                tfPrice.setText(null);
+                                tfQuantity.setText(null);
+                                productName = db.getName("Select productname from product where productid ='" + product + "'");
+                                ///add su kien sua
+                                if (checkCrt) {
+                                    int column = 0;
+                                    int row = DepotForm.tp.row;
+                                    for (int i = 0; i < row; i++) {
+                                        if (DepotForm.tp.getLabels().get(column).getText().equals(productName)) {
+                                            int newQuantity = Integer.parseInt(DepotForm.tp.labels.get(2 + column).getText()) + quantity * Integer.parseInt(unitPart[3]);
+                                            DepotForm.tp.labels.get(3 + column).setText(price);
+                                            DepotForm.tp.labels.get(2 + column).setText(String.valueOf(newQuantity));
+                                            checkAdd = false;
+                                        }
+                                        column += DepotForm.tp.column;
+                                    }
+                                }
+                                //add su kien them bang
+                                if (checkAdd  && db.check("Select productid from depot where productid=N'" + product + "'")) {
+                                    //lay du lieu vua moi add
+                                    ArrayList<Object> obData = db.getAllData("select productname , productcontent, depot.quantity, depot.price, suppliername from depot join product on  depot.productid = product.productid join supplier on product.supplierid = supplier.supplierid\n" +
+                                            "where depot.productid ='"+product+"'");
+                                    //set layout lai cho panel body
+                                    DepotForm.tp.pnlAllData.setLayout(new GridLayout(db.getRowCount("depot"),0));
+                                    int column = DepotForm.tp.column;
+                                    int i = DepotForm.tp.pnlData.size();
+                                    int z = DepotForm.tp.labels.size();
+                                    //khoi tao panel data
+                                    DepotForm.tp.pnlData.add(new JPanel());
+                                    DepotForm.tp.pnlData.get(i).setLayout(new GridLayout(0, column + 1));
+                                    for (int y = 0; y < column; y++) {
+                                        DepotForm.tp.labels.add(new JLabel());
+                                        DepotForm.tp.labels.get(z).setVerticalAlignment(SwingConstants.CENTER);
+                                        //                labels[z].setHorizontalAlignment(SwingConstants.CENTER);
+                                        DepotForm.tp.labels.get(z).setText(obData.get(y).toString());
+                                        DepotForm.tp.labels.get(z).setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
+                                        DepotForm.tp.labels.get(z).setPreferredSize(DepotForm.d);
+                                        DepotForm.tp.pnlData.get(i).add(DepotForm.tp.labels.get(z));
+                                        z++;
+                                    }
+                                    // add panel chua data vao panel body
+                                    DepotForm.tp.pnlAllData.add(DepotForm.tp.pnlData.get(i));
+                                    //add edit row
+                                    DepotForm.tp.btnEdit.add(new JButton());
+                                    DepotForm.tp.btnEdit.get(i).setText("<HTML><FONT color=\"#006ce5\"><U>Edit</U></FONT>"
+                                            + " </HTML>");
+                                    DepotForm.tp.btnEdit.get(i).setHorizontalAlignment(SwingConstants.CENTER);
+                                    DepotForm.tp.btnEdit.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
+                                    DepotForm.tp.btnEdit.get(i).setOpaque(false);
+                                    DepotForm.tp.btnEdit.get(i).setBackground(Color.WHITE);
+                                    DepotForm.tp.btnEdit.get(i).setPreferredSize(DepotForm.d);
+//                                  DepotForm.tp.btnEdit.get(i).addActionListener(this::ActionEvent);
+                                    DepotForm.tp.pnlData.get(i).add(DepotForm.tp.btnEdit.get(i));
+                                }
+                                DepotForm.tp.pnlAllData.revalidate();
+
+                            }
                         }
                      }catch (Exception ex)
                     {
@@ -130,15 +210,9 @@ public class ImportForm extends JDialog {
                         JOptionPane.showMessageDialog(rootPane,"Please enter number only");
                     }
                 }
-
             }
-
         });
         add(btnCreate);
-
-
         setVisible(true);
-
-
     }
 }

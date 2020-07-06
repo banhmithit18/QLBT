@@ -1,6 +1,7 @@
 package utils;
 
 import java.lang.reflect.Field;
+import java.security.interfaces.RSAKey;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -35,6 +36,21 @@ public class DBConnection<T> {
             strReturn = strReturn.substring(0, strReturn.length() - 1); //loai bo dau phay cuoi
             return strReturn;
 
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return "";
+    }
+    public String getName(String query)
+    {
+        try(Connection con = DriverManager.getConnection(urlConnection))
+        {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                return rs.getString(1);
+            }
         }catch (SQLException e)
         {
             e.printStackTrace();
@@ -127,7 +143,7 @@ public class DBConnection<T> {
 
                 } else if (fieldItem.getType().equals(Timestamp.class)) {
                     query += "'" + fieldItem.get(item) + "',";
-                } else if (fieldItem.getType().equals(int.class)) {
+                } else if (fieldItem.getType().equals(int.class)||fieldItem.getType().equals(float.class)) {
                     query += fieldItem.get(item) + ",";
                 }
 

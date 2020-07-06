@@ -3,16 +3,14 @@ package models.entities;
 import java.sql.Timestamp;
 
 public class Import {
-    public String importid, productid;
-    public int quantity, depotid, supplierid, unit, employeeid;
+    public String  productid;
+    public int quantity, supplierid, unit, employeeid;
     public float price;
     public Timestamp date;
 
-    public Import(String importid, String productid, int quantity, int depotid, int supplierid, int unit, int employeeid, float price, Timestamp date) {
-        this.importid = importid;
+    public Import(String productid, int quantity,int supplierid, int unit, int employeeid, float price, Timestamp date) {
         this.productid = productid;
         this.quantity = quantity;
-        this.depotid = depotid;
         this.supplierid = supplierid;
         this.unit = unit;
         this.employeeid = employeeid;
@@ -21,23 +19,13 @@ public class Import {
     }
 
     public Import() {
-        importid = null;
         productid = null;
         quantity = 0;
-        depotid = 0;
         supplierid = 0;
         unit = 0;
         employeeid = 0;
         price = 0;
         price = 0;
-    }
-
-    public String getImportid() {
-        return importid;
-    }
-
-    public void setImportid(String importid) {
-        this.importid = importid;
     }
 
     public String getProductid() {
@@ -54,14 +42,6 @@ public class Import {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public int getDepotid() {
-        return depotid;
-    }
-
-    public void setDepotid(int depotid) {
-        this.depotid = depotid;
     }
 
     public int getSupplierid() {
