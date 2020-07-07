@@ -1,6 +1,5 @@
 package forms;
 
-import utils.ChangePosition;
 import utils.DBConnection;
 
 import javax.swing.*;
@@ -9,11 +8,12 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public abstract class TableForm {
-    protected JLabel[] labels, labelshead;
-    protected   JPanel[] pnlData;
-    protected   JButton[] btnEdit;
+    protected JLabel[] labelshead;
+    protected   ArrayList<JPanel> pnlData = new ArrayList<>();
+    protected   ArrayList<JButton> btnEdit = new ArrayList<>();
     protected   int row, column;
     protected   JPanel pnlAllData;
+    protected  ArrayList<JLabel> labels = new ArrayList<>();
     public JScrollPane table(String table, String[] columnName, String query, Dimension d, boolean editable) {
         DBConnection db = new DBConnection();
         // lay so hang + so cot bang muon ve
@@ -25,8 +25,6 @@ public abstract class TableForm {
         //set layout
         panel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        // tao array label chua data
-        labels = new JLabel[column * row + row + 1];
         // lay du lieu bang
         ArrayList<Object> ob = db.getAllData(query);
         // tao array label chua ten cot
@@ -56,39 +54,35 @@ public abstract class TableForm {
         //tao panel chua panel data
         pnlAllData = new JPanel();
         pnlAllData.setLayout(new GridLayout(row,0));
-        //tao panel chua label data
-        pnlData = new JPanel[row];
-        //tao array label edit
-        btnEdit = new JButton[row];
         // ve bang label data
-        int z = 1;
+        int z = 0;
         for (int i = 0; i < row; i++) {
             //khoi tao panel data
-            pnlData[i] = new JPanel();
-            pnlData[i].setLayout(new GridLayout(0,column+1));
-            for (int y = 0; y < column; y++) {
-                labels[z] = new JLabel();
-                labels[z].setVerticalAlignment(SwingConstants.CENTER);
+            pnlData.add(new JPanel());
+        pnlData.get(i).setLayout(new GridLayout(0,column+1));
+        for (int y = 0; y < column; y++) {
+            labels.add(new JLabel());
+            labels.get(z).setVerticalAlignment(SwingConstants.CENTER);
 //                labels[z].setHorizontalAlignment(SwingConstants.CENTER);
-                labels[z].setText(ob.get(z - 1).toString());
-                labels[z].setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
-                labels[z].setPreferredSize(d);
-                pnlData[i].add(labels[z]);
-                z++;
-            }
-            pnlAllData.add(pnlData[i]);
-            //add edit row
-            btnEdit[i] = new JButton();
-            btnEdit[i].setText("<HTML><FONT color=\"#006ce5\"><U>Edit</U></FONT>"
-                    + " </HTML>");
-            btnEdit[i].setHorizontalAlignment(SwingConstants.CENTER);
-            btnEdit[i].setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
-            btnEdit[i].setOpaque(false);
-            btnEdit[i].setBackground(Color.WHITE);
-            btnEdit[i].setPreferredSize(d);
-            btnEdit[i].addActionListener(this::ActionEvent);
-            pnlData[i].add(btnEdit[i]);
+            labels.get(z).setText(ob.get(z ).toString());
+            labels.get(z).setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
+            labels.get(z).setPreferredSize(d);
+            pnlData.get(i).add(labels.get(z));
+            z++;
         }
+        pnlAllData.add(pnlData.get(i));
+        //add edit row
+        btnEdit.add(new JButton());
+        btnEdit.get(i).setText("<HTML><FONT color=\"#006ce5\"><U>Edit</U></FONT>"
+                + " </HTML>");
+        btnEdit.get(i).setHorizontalAlignment(SwingConstants.CENTER);
+        btnEdit.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
+        btnEdit.get(i).setOpaque(false);
+        btnEdit.get(i).setBackground(Color.WHITE);
+        btnEdit.get(i).setPreferredSize(d);
+        btnEdit.get(i).addActionListener(this::ActionEvent);
+        pnlData.get(i).add(btnEdit.get(i));
+    }
         //add panel header va panel data vao panel tong
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
@@ -100,7 +94,7 @@ public abstract class TableForm {
         return sp;
     }
 
-    public JLabel[] getLabels() {
+    public ArrayList<JLabel> getLabels() {
         return labels;
     }
 
@@ -108,11 +102,11 @@ public abstract class TableForm {
         return labelshead;
     }
 
-    public JPanel[] getPnlData() {
+    public ArrayList<JPanel> getPnlData() {
         return pnlData;
     }
 
-    public JButton[] getBtnEdit() {
+    public ArrayList<JButton> getBtnEdit() {
         return btnEdit;
     }
 

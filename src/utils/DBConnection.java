@@ -1,6 +1,7 @@
 package utils;
 
 import java.lang.reflect.Field;
+import java.security.interfaces.RSAKey;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -38,7 +39,55 @@ public class DBConnection<T> {
         }catch (SQLException e)
         {
             e.printStackTrace();
-        }return null;
+        }return "";
+    }
+    public String getName(String query)
+    {
+        try(Connection con = DriverManager.getConnection(urlConnection))
+        {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                return rs.getString(1);
+            }
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return "";
+    }
+    public int getID(String query)
+    {
+        try (Connection con = DriverManager.getConnection(urlConnection))
+        {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next())
+            {
+                return rs.getInt(1);
+            }
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return 0;
+    }
+    public String getUnit(){
+        try (Connection con = DriverManager.getConnection(urlConnection))
+        {
+            String query = "Select value,unitname,unitconvertvalue,unitconvertname from unit";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while(rs.next())
+            {
+                strReturn += rs.getInt("value")+ " "+rs.getString("unitname")+" = "+rs.getInt("unitconvertvalue")+" "+rs.getString("unitconvertname")+",";
+            }
+            strReturn = strReturn.substring(0,strReturn.length());
+            return strReturn;
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return "";
     }
     public boolean check(String query){
         try (Connection con = DriverManager.getConnection(urlConnection)){ ;
@@ -94,7 +143,7 @@ public class DBConnection<T> {
 
                 } else if (fieldItem.getType().equals(Timestamp.class)) {
                     query += "'" + fieldItem.get(item) + "',";
-                } else if (fieldItem.getType().equals(int.class)) {
+                } else if (fieldItem.getType().equals(int.class)||fieldItem.getType().equals(float.class)) {
                     query += fieldItem.get(item) + ",";
                 }
 

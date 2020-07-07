@@ -2,6 +2,7 @@ package forms;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 
 public class TableDepot extends TableForm {
@@ -11,7 +12,7 @@ public class TableDepot extends TableForm {
      ////add su kien
         System.out.println("A");
     }
-    public JLabel[] getLabels() {
+    public ArrayList<JLabel> getLabels() {
         return labels;
     }
 
@@ -19,11 +20,11 @@ public class TableDepot extends TableForm {
         return labelshead;
     }
 
-    public JPanel[] getPnlData() {
+    public ArrayList<JPanel> getPnlData() {
         return pnlData;
     }
 
-    public JButton[] getBtnEdit() {
+    public ArrayList<JButton> getBtnEdit() {
         return btnEdit;
     }
 

@@ -1,5 +1,7 @@
 package forms;
 
+import models.entities.Import;
+import models.entities.depot;
 import utils.DBConnection;
 import utils.setUIFont;
 
@@ -8,8 +10,14 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class ImportForm extends JDialog {
+    protected int quantity;
+    protected String price;
+    protected boolean checkCrt = false ;
+    protected String productName;
+    protected static JComboBox boxProduct;
     public ImportForm() {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setModal(true);
@@ -17,81 +25,194 @@ public class ImportForm extends JDialog {
         setTitle("Import");
         setUIFont s = new setUIFont();
         s.Font(new FontUIResource("Arial", Font.PLAIN, 12));
-        setBounds(50, 50, 700, 400);
+        setBounds(100, 100, 450, 500);
         setLayout(null);
 
         JLabel lblProduct = new JLabel("Product");
-        lblProduct.setBounds(400, 10, 80, 25);
+        lblProduct.setBounds(30, 10, 80, 25);
         add(lblProduct);
 
         DBConnection db = new DBConnection();
         String[] comboboxArr = db.getComboboxString("select productid from product").split(",");
-        JComboBox boxProduct = new JComboBox(comboboxArr);
-        boxProduct.setBounds(480, 10, 180, 25);
+        boxProduct = new JComboBox(comboboxArr);
+        boxProduct.setBounds(110, 10, 180, 25);
         ComboboxDecorator.decorate(boxProduct, true);
         add(boxProduct);
 
+        JButton btnAddProduct = new JButton("Add Product");
+        btnAddProduct.setBounds(300,10,120,25);
+        btnAddProduct.addActionListener(e -> {
+            AddProductForm apf = new AddProductForm();
+        });
+        add(btnAddProduct);
+
         JLabel lblQuantity = new JLabel("Quantity");
-        lblQuantity.setBounds(400, 60, 80, 25);
+        lblQuantity.setBounds(30, 60, 80, 25);
         add(lblQuantity);
 
         JTextField tfQuantity = new JTextField();
-        tfQuantity.setBounds(480, 60, 180, 25);
+        tfQuantity.setBounds(110, 60, 180, 25);
         //add rang buoc chi nhap so
         tfQuantity.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() < '0' && e.getKeyChar() > '9' || (int) e.getKeyChar() != 8) {
+                if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || (int) e.getKeyChar() == 8) {
+                }
+                else {
                     e.consume();
                     JOptionPane.showMessageDialog(rootPane, "Please enter number only");
+
                 }
             }
         });
         add(tfQuantity);
 
         JLabel lblSupplier = new JLabel("Supplier");
-        lblSupplier.setBounds(400, 110, 80, 25);
+        lblSupplier.setBounds(30, 110, 80, 25);
         add(lblSupplier);
 
         String[] strSupplier = db.getComboboxString("Select suppliername from supplier").split(",");
         JComboBox boxSupplier = new JComboBox(strSupplier);
-        boxSupplier.setBounds(480, 110, 180, 25);
+        boxSupplier.setBounds(110, 110, 180, 25);
         ComboboxDecorator.decorate(boxSupplier, true);
         add(boxSupplier);
 
         JLabel lblUnit = new JLabel("Unit");
-        lblUnit.setBounds(400, 160, 80, 25);
+        lblUnit.setBounds(30, 160, 80, 25);
         add(lblUnit);
 
+        String[] strUnit = db.getUnit().split(",");
+        JComboBox boxUnit = new JComboBox(strUnit);
+        boxUnit.setBounds(110,160,180,25);
+        add(boxUnit);
+
         JLabel lblPrice = new JLabel("Price");
-        lblPrice.setBounds(400, 210, 80, 25);
+        lblPrice.setBounds(30, 210, 80, 25);
         add(lblPrice);
 
         JTextField tfPrice = new JTextField();
-        tfPrice.setBounds(480, 210, 180, 25);
-        tfPrice.addKeyListener(new KeyAdapter() {
-            boolean dot = false;
+        tfPrice.setBounds(110, 210, 180, 25);
+        add(tfPrice);
 
-            public void keyTyped(KeyEvent e) {
-                char vChar = e.getKeyChar();
-                if (tfPrice.getText().equals(""))
-                    dot = false;
-                if (dot == false) {
-                    if (vChar == '.') dot = true;
-                    else if (!(Character.isDigit(vChar)
-                            || (vChar == KeyEvent.VK_BACK_SPACE)
-                            || (vChar == KeyEvent.VK_DELETE))) {
-                        JOptionPane.showMessageDialog(rootPane, "Please enter number only");
-                        e.consume();
+        JButton btnCreate = new JButton("Create");
+        btnCreate.setBounds(120,260,120,25);
+        btnCreate.addActionListener(e -> {
+            String product = boxProduct.getSelectedItem().toString();
+            int supplier = db.getID("Select supplierid from supplier where suppliername ='"+boxSupplier.getSelectedItem().toString()+"'");
+            price = tfPrice.getText();
+            String quantityStr = tfQuantity.getText();
+
+            if(price.equals("")|| quantityStr.equals(""))
+            {
+
+                JOptionPane.showMessageDialog(rootPane,"Please enter all required information");
+            }
+            else
+            {
+                if(price.matches("^([+-]?\\d*\\.?\\d*)$"));
+                {
+                    try {
+                        quantity = Integer.parseInt(quantityStr);
+                        int check = 0;
+                        float p = Float.valueOf(price);
+                        Import imp = new Import();
+                        if(db.check("select productid from product where productid ='"+product+"'")) {
+                            imp.setProductid(product);
+                            check++;
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(rootPane,"Could not find product");
+                        }
+                        if (db.check("select supplierid from supplier where supplierid = "+supplier)) {
+                            imp.setSupplierid(supplier);
+                            check++;
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(rootPane,"Could not find supplier");
+                        }
+                        if(check == 2) {
+                            imp.setQuantity(quantity);
+                            imp.setPrice(p);
+                            imp.setDate(TimeStampConvert.getTimeStamp());
+                            String[] unitPart = boxUnit.getSelectedItem().toString().split(" ");
+                            imp.setUnit(db.getID("Select unitid from unit where unitname =N'" + unitPart[1] + "' and unitconvertvalue =" + unitPart[3] + " and unitconvertname =N'" + unitPart[4] + "'"));
+                            imp.setEmployeeid(1);
+                            if (db.Create(imp)) {
+                                int realQuantity = quantity * Integer.parseInt(unitPart[3]);
+                                depot d = new depot(product,realQuantity,p);
+                                db.Create(d);
+                                checkCrt = true;
+                                boolean checkAdd = true;
+                                JOptionPane.showMessageDialog(rootPane, "Create successfully");
+                                tfPrice.setText(null);
+                                tfQuantity.setText(null);
+                                productName = db.getName("Select productname from product where productid ='" + product + "'");
+                                ///add su kien sua
+                                if (checkCrt) {
+                                    int column = 0;
+                                    int row = DepotForm.tp.row;
+                                    for (int i = 0; i < row; i++) {
+                                        if (DepotForm.tp.getLabels().get(column).getText().equals(productName)) {
+                                            int newQuantity = Integer.parseInt(DepotForm.tp.labels.get(2 + column).getText()) + quantity * Integer.parseInt(unitPart[3]);
+                                            DepotForm.tp.labels.get(3 + column).setText(price);
+                                            DepotForm.tp.labels.get(2 + column).setText(String.valueOf(newQuantity));
+                                            checkAdd = false;
+                                        }
+                                        column += DepotForm.tp.column;
+                                    }
+                                }
+                                //add su kien them bang
+                                if (checkAdd  && db.check("Select productid from depot where productid=N'" + product + "'")) {
+                                    //lay du lieu vua moi add
+                                    ArrayList<Object> obData = db.getAllData("select productname , productcontent, depot.quantity, depot.price, suppliername from depot join product on  depot.productid = product.productid join supplier on product.supplierid = supplier.supplierid\n" +
+                                            "where depot.productid ='"+product+"'");
+                                    //set layout lai cho panel body
+                                    DepotForm.tp.pnlAllData.setLayout(new GridLayout(db.getRowCount("depot"),0));
+                                    int column = DepotForm.tp.column;
+                                    int i = DepotForm.tp.pnlData.size();
+                                    int z = DepotForm.tp.labels.size();
+                                    //khoi tao panel data
+                                    DepotForm.tp.pnlData.add(new JPanel());
+                                    DepotForm.tp.pnlData.get(i).setLayout(new GridLayout(0, column + 1));
+                                    for (int y = 0; y < column; y++) {
+                                        DepotForm.tp.labels.add(new JLabel());
+                                        DepotForm.tp.labels.get(z).setVerticalAlignment(SwingConstants.CENTER);
+                                        //                labels[z].setHorizontalAlignment(SwingConstants.CENTER);
+                                        DepotForm.tp.labels.get(z).setText(obData.get(y).toString());
+                                        DepotForm.tp.labels.get(z).setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
+                                        DepotForm.tp.labels.get(z).setPreferredSize(DepotForm.d);
+                                        DepotForm.tp.pnlData.get(i).add(DepotForm.tp.labels.get(z));
+                                        z++;
+                                    }
+                                    // add panel chua data vao panel body
+                                    DepotForm.tp.pnlAllData.add(DepotForm.tp.pnlData.get(i));
+                                    //add edit row
+                                    DepotForm.tp.btnEdit.add(new JButton());
+                                    DepotForm.tp.btnEdit.get(i).setText("<HTML><FONT color=\"#006ce5\"><U>Edit</U></FONT>"
+                                            + " </HTML>");
+                                    DepotForm.tp.btnEdit.get(i).setHorizontalAlignment(SwingConstants.CENTER);
+                                    DepotForm.tp.btnEdit.get(i).setBorder(BorderFactory.createMatteBorder(0, 0, 1, 1, Color.black));
+                                    DepotForm.tp.btnEdit.get(i).setOpaque(false);
+                                    DepotForm.tp.btnEdit.get(i).setBackground(Color.WHITE);
+                                    DepotForm.tp.btnEdit.get(i).setPreferredSize(DepotForm.d);
+//                                  DepotForm.tp.btnEdit.get(i).addActionListener(this::ActionEvent);
+                                    DepotForm.tp.pnlData.get(i).add(DepotForm.tp.btnEdit.get(i));
+                                }
+                                DepotForm.tp.pnlAllData.revalidate();
+
+                            }
+                        }
+                     }catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(rootPane,"Please enter number only");
                     }
-
                 }
             }
         });
-        add(tfPrice);
-
+        add(btnCreate);
         setVisible(true);
-
-
     }
 }

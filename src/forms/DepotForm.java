@@ -8,6 +8,9 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 
 public class DepotForm extends JDialog {
+    int row;
+    public static Dimension d;
+    public static TableDepot tp;
     public DepotForm() {
         //setting form
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -49,11 +52,6 @@ public class DepotForm extends JDialog {
         JButton btnSearch = new JButton("Search");
         btnSearch.setBounds(120, 80, 120, 25);
 
-        JButton btnImport = new JButton("Import");
-        btnImport.setBounds(500,40,80,25);
-        btnImport.addActionListener(e -> {});
-        pnlHead.add(btnImport);
-
         //add JPanel body
         JPanel pnlBody = new JPanel();
         pnlBody.setLayout(new GridLayout(1, 0));
@@ -62,17 +60,16 @@ public class DepotForm extends JDialog {
         String query = "select productname , productcontent, depot.quantity, depot.price, suppliername\n" +
                 "from depot join product on  depot.productid = product.productid\n" +
                 "join supplier on product.supplierid = supplier.supplierid";
-        Dimension d = new Dimension(164, 20);
-        TableDepot tp = new TableDepot();
+        d = new Dimension(164, 20);
+        tp = new TableDepot();
         JScrollPane sp = tp.table("depot", columnname, query, d, true);
-        ;
         //tao su kien search
         btnSearch.addActionListener(e -> {
             ChangePosition c = new ChangePosition();
             int position = 0;
             int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
             String strSearch = tfSearch.getText(); // lay text trong text field
-            int row = tp.row; // lay so hang
+            row = tp.row; // lay so hang
             int column = 0;
             if (index == 0 ) // tuong duong voi All trong boxSearch
             {
@@ -81,18 +78,18 @@ public class DepotForm extends JDialog {
                     item.show();
                 }
             } else {
-                for (int i = 1; i <= row; i++) {
-                    if (tp.labels[index + column].getText().matches(".*" + strSearch + ".*"))
+                for (int i = 0; i < row; i++) {
+                    if (tp.getLabels().get(index-1 + column).getText().matches(".*" + strSearch + ".*"))
                     {
-                        tp.pnlData[i - 1].show();
+                        tp.pnlData.get(i).show();
                         for (int secondIndex = 0; secondIndex < tp.pnlAllData.getComponentCount(); secondIndex++) {
-                            if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData[i-1])) {
+                            if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData.get(i))) {
                                 c.swap(tp.pnlAllData, position, secondIndex);
                                 position++;
                             }
                         }
                     } else {
-                        tp.pnlData[i - 1].hide();
+                        tp.pnlData.get(i).hide();
                     }
                     column += tp.column;
                 }
@@ -104,6 +101,14 @@ public class DepotForm extends JDialog {
         });
         pnlHead.add(btnSearch);
         pnlBody.add(sp);
+
+        JButton btnImport = new JButton("Import");
+        btnImport.setBounds(500,40,80,25);
+        btnImport.addActionListener(e -> {
+            ImportForm im = new ImportForm();
+
+        });
+        pnlHead.add(btnImport);
 
         //add 2 panel to box
         pnlBody.setPreferredSize(new Dimension(1300, 400));
