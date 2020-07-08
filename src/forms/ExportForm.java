@@ -77,7 +77,7 @@ public class ExportForm extends JDialog {
 
         String[] strProduct = db.getComboboxString("Select distinct productid from depot").split(",");
         JComboBox comboBox_1 = new JComboBox(strProduct);
-        String [] productToolTipArr = db.getProductInformation().split(",");
+        String [] productToolTipArr = db.getProductInformation("depot").split(",");
         comboBox_1.addActionListener(e -> {
             try{
                 Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
@@ -178,7 +178,7 @@ public class ExportForm extends JDialog {
 
                                       }
                                       column += DepotForm.tp.column;
-                                  }
+                                  } 
                               if(!db.check("Select importid from inventory where importid ='"+importId+"'"))
                               {
                                   inventory inv = new inventory();

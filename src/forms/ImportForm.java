@@ -10,8 +10,11 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ImportForm extends JDialog {
     protected int quantity;
@@ -34,6 +37,11 @@ public class ImportForm extends JDialog {
         DBConnection db = new DBConnection();
         String[] comboboxArr = db.getComboboxString("select productid from product").split(",");
         boxProduct = new JComboBox(comboboxArr);
+        ComboboxToolTipRender productRender = new ComboboxToolTipRender();
+        boxProduct.setRenderer(productRender);
+        String []  productToolTipArr = db.getProductInformation("product").split(",");
+        List<String> listProduct = Arrays.asList(productToolTipArr);
+        productRender.setTooltips(listProduct);
         boxProduct.setBounds(110, 10, 180, 25);
         ComboboxDecorator.decorate(boxProduct, true);
         add(boxProduct);
@@ -72,6 +80,11 @@ public class ImportForm extends JDialog {
 
         String[] strSupplier = db.getComboboxString("Select suppliername from supplier").split(",");
         JComboBox boxSupplier = new JComboBox(strSupplier);
+        ComboboxToolTipRender render = new ComboboxToolTipRender();
+        String [] arrSupplier = db.getSupplierInformation().split(",");
+        List<String> listSupplier = Arrays.asList(arrSupplier);
+        render.setTooltips(listSupplier);
+        boxSupplier.setRenderer(render);
         boxSupplier.setBounds(110, 110, 180, 25);
         ComboboxDecorator.decorate(boxSupplier, true);
         add(boxSupplier);
