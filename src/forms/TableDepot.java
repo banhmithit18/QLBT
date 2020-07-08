@@ -10,7 +10,13 @@ public class TableDepot extends TableForm {
     @Override
     void ActionEvent(ActionEvent e) {
      ////add su kien
-        System.out.println("A");
+        for(int i = 0 ; i<this.row ; i++)
+        {
+            if(this.btnEdit.get(i).equals(e.getSource()))
+            {
+                System.out.println(i);
+            }
+        }
     }
     public ArrayList<JLabel> getLabels() {
         return labels;
