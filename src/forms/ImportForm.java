@@ -10,12 +10,12 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class ImportForm extends JDialog {
     protected int quantity;
     protected String price;
-    protected boolean checkCrt = false ;
     protected String productName;
     protected static JComboBox boxProduct;
     public ImportForm() {
@@ -23,8 +23,7 @@ public class ImportForm extends JDialog {
         setModal(true);
         setResizable(false);
         setTitle("Import");
-        setUIFont s = new setUIFont();
-        s.Font(new FontUIResource("Arial", Font.PLAIN, 12));
+        setUIFont.Font(new FontUIResource("Arial", Font.PLAIN, 12));
         setBounds(100, 100, 450, 500);
         setLayout(null);
 
@@ -94,10 +93,26 @@ public class ImportForm extends JDialog {
         tfPrice.setBounds(110, 210, 180, 25);
         add(tfPrice);
 
+        JLabel lblExpDate = new JLabel("Expiration Date");
+        lblExpDate.setBounds(30,260,80,25);
+        add(lblExpDate);
+
+        JTextField tfExpDate = new JTextField("YYYY-MM-DD");
+        tfExpDate.setToolTipText("YYYY-MM-DD");
+        tfExpDate.setBounds(110,260,180,25);
+        add(tfExpDate);
+
         JButton btnCreate = new JButton("Create");
-        btnCreate.setBounds(120,260,120,25);
+        btnCreate.setBounds(120,310,120,25);
         btnCreate.addActionListener(e -> {
-            String product = boxProduct.getSelectedItem().toString();
+            if(!tfExpDate.getText().matches("^\\d{4}-\\d{2}-\\d{2}$"))
+            {
+                JOptionPane.showMessageDialog(rootPane,"Wrong date format");
+
+            }
+            else {
+                String Strexpirationdate = tfExpDate.getText();
+                String product = boxProduct.getSelectedItem().toString();
             int supplier = db.getID("Select supplierid from supplier where suppliername ='"+boxSupplier.getSelectedItem().toString()+"'");
             price = tfPrice.getText();
             String quantityStr = tfQuantity.getText();
@@ -138,36 +153,41 @@ public class ImportForm extends JDialog {
                             imp.setDate(TimeStampConvert.getTimeStamp());
                             String[] unitPart = boxUnit.getSelectedItem().toString().split(" ");
                             imp.setUnit(db.getID("Select unitid from unit where unitname =N'" + unitPart[1] + "' and unitconvertvalue =" + unitPart[3] + " and unitconvertname =N'" + unitPart[4] + "'"));
-                            imp.setEmployeeid(1);
+                            imp.setEmployeeid(1);// nho sua
+                            imp.setExpirationdate(Strexpirationdate);
                             if (db.Create(imp)) {
                                 int realQuantity = quantity * Integer.parseInt(unitPart[3]);
-                                depot d = new depot(product,realQuantity,p);
+                                ArrayList<Object> ob = db.getAllData("select top 1 importid,date  from import where productid  ='"+product+"' order by importid desc");
+                                Timestamp importdate = (Timestamp) ob.get(1);
+                                String importid = ob.get(0).toString();
+                                depot d = new depot(importid,product,realQuantity,p,Strexpirationdate,importdate);
                                 db.Create(d);
-                                checkCrt = true;
-                                boolean checkAdd = true;
+//                                checkCrt = true;
+//                                boolean checkAdd = true;
                                 JOptionPane.showMessageDialog(rootPane, "Create successfully");
                                 tfPrice.setText(null);
                                 tfQuantity.setText(null);
                                 productName = db.getName("Select productname from product where productid ='" + product + "'");
                                 ///add su kien sua
-                                if (checkCrt) {
-                                    int column = 0;
-                                    int row = DepotForm.tp.row;
-                                    for (int i = 0; i < row; i++) {
-                                        if (DepotForm.tp.getLabels().get(column).getText().equals(productName)) {
-                                            int newQuantity = Integer.parseInt(DepotForm.tp.labels.get(2 + column).getText()) + quantity * Integer.parseInt(unitPart[3]);
-                                            DepotForm.tp.labels.get(3 + column).setText(price);
-                                            DepotForm.tp.labels.get(2 + column).setText(String.valueOf(newQuantity));
-                                            checkAdd = false;
-                                        }
-                                        column += DepotForm.tp.column;
-                                    }
-                                }
+//                                if (checkCrt) {
+//                                    int column = 0;
+//                                    int row = DepotForm.tp.row;
+//                                    for (int i = 0; i < row; i++) {
+//                                        if (DepotForm.tp.getLabels().get(column).getText().equals(importid)) {
+//                                            int newQuantity = Integer.parseInt(DepotForm.tp.labels.get(2 + column).getText()) + quantity * Integer.parseInt(unitPart[3]);
+//                                            DepotForm.tp.labels.get(4 + column).setText(price);
+//                                            DepotForm.tp.labels.get(3 + column).setText(String.valueOf(newQuantity));
+//                                            checkAdd = false;
+//                                        }
+//                                        column += DepotForm.tp.column;
+//                                    }
+//                                }
                                 //add su kien them bang
-                                if (checkAdd  && db.check("Select productid from depot where productid=N'" + product + "'")) {
+                                if ( db.check("Select productid from depot where productid=N'" + product + "'")) {
                                     //lay du lieu vua moi add
-                                    ArrayList<Object> obData = db.getAllData("select productname , productcontent, depot.quantity, depot.price, suppliername from depot join product on  depot.productid = product.productid join supplier on product.supplierid = supplier.supplierid\n" +
-                                            "where depot.productid ='"+product+"'");
+                                    ArrayList<Object> obData = db.getAllData("select importid,productname , productcontent, depot.quantity, depot.price, suppliername,importdate,expirationdate\n" +
+                                                    "from depot join product on  depot.productid = product.productid\n" +
+                                                    "join supplier on product.supplierid = supplier.supplierid where importid ='"+importid+"'");
                                     //set layout lai cho panel body
                                     DepotForm.tp.pnlAllData.setLayout(new GridLayout(db.getRowCount("depot"),0));
                                     int column = DepotForm.tp.column;
@@ -200,6 +220,7 @@ public class ImportForm extends JDialog {
 //                                  DepotForm.tp.btnEdit.get(i).addActionListener(this::ActionEvent);
                                     DepotForm.tp.pnlData.get(i).add(DepotForm.tp.btnEdit.get(i));
                                 }
+                                DepotForm.tp.pnlAllData.repaint();
                                 DepotForm.tp.pnlAllData.revalidate();
 
                             }
@@ -211,7 +232,7 @@ public class ImportForm extends JDialog {
                     }
                 }
             }
-        });
+        }});
         add(btnCreate);
         setVisible(true);
     }

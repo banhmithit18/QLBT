@@ -1,6 +1,7 @@
 package forms;
 
 import utils.ChangePosition;
+import utils.DBConnection;
 import utils.setUIFont;
 
 import javax.swing.*;
@@ -44,7 +45,7 @@ public class DepotForm extends JDialog {
         tfSearch.setBounds(10, 40, 200, 25);
         pnlHead.add(tfSearch);
 
-        String[] boxColumn = {"All", "Name", "Content", "Quantity", "Price", "Supplier"};
+        String[] boxColumn = {"All","ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
@@ -56,20 +57,21 @@ public class DepotForm extends JDialog {
         JPanel pnlBody = new JPanel();
         pnlBody.setLayout(new GridLayout(1, 0));
         //add component to panel body
-        String[] columnname = {"Name", "Content", "Quantity", "Price", "Supplier"};
-        String query = "select productname , productcontent, depot.quantity, depot.price, suppliername\n" +
+        String[] columnname = {"ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
+        String query = "select importid,productname , productcontent, depot.quantity, depot.price, suppliername,importdate,expirationdate\n" +
                 "from depot join product on  depot.productid = product.productid\n" +
                 "join supplier on product.supplierid = supplier.supplierid";
-        d = new Dimension(164, 20);
+        d = new Dimension(115, 20);
         tp = new TableDepot();
         JScrollPane sp = tp.table("depot", columnname, query, d, true);
         //tao su kien search
         btnSearch.addActionListener(e -> {
+            DBConnection db = new DBConnection();
             ChangePosition c = new ChangePosition();
             int position = 0;
             int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
             String strSearch = tfSearch.getText(); // lay text trong text field
-            row = tp.row; // lay so hang
+            row = db.getRowCount("depot"); // lay so hang
             int column = 0;
             if (index == 0 ) // tuong duong voi All trong boxSearch
             {
@@ -109,6 +111,12 @@ public class DepotForm extends JDialog {
 
         });
         pnlHead.add(btnImport);
+        JButton btnExport = new JButton("Export");
+        btnExport.setBounds(600,40,80,25);
+        btnExport.addActionListener(e -> {
+            ExportForm ex = new ExportForm();
+        });
+        pnlHead.add(btnExport);
 
         //add 2 panel to box
         pnlBody.setPreferredSize(new Dimension(1300, 400));

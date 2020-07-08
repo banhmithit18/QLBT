@@ -3,29 +3,31 @@ package models.entities;
 import java.sql.Timestamp;
 
 public class Import {
-    public String  productid;
-    public int quantity, supplierid, unit, employeeid;
+    public String productid,expirationdate;
+    public int quantity,supplierid,unit,employeeid;
     public float price;
     public Timestamp date;
 
-    public Import(String productid, int quantity,int supplierid, int unit, int employeeid, float price, Timestamp date) {
+    public Import(){
+        productid = "";
+        quantity = 0;
+        supplierid = 0;
+        unit = 0;
+        employeeid = 0 ;
+        price = 0;
+        expirationdate = null;
+        date = null;
+    }
+
+    public Import(String productid, int quantity, int supplierid, int unit, int employeeid, float price, String expirationdate, Timestamp date) {
         this.productid = productid;
         this.quantity = quantity;
         this.supplierid = supplierid;
         this.unit = unit;
         this.employeeid = employeeid;
         this.price = price;
+        this.expirationdate = expirationdate;
         this.date = date;
-    }
-
-    public Import() {
-        productid = null;
-        quantity = 0;
-        supplierid = 0;
-        unit = 0;
-        employeeid = 0;
-        price = 0;
-        price = 0;
     }
 
     public String getProductid() {
@@ -74,6 +76,14 @@ public class Import {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public String getExpirationdate() {
+        return expirationdate;
+    }
+
+    public void setExpirationdate(String expirationdate) {
+        this.expirationdate = expirationdate;
     }
 
     public Timestamp getDate() {

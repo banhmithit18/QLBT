@@ -23,6 +23,47 @@ public class DBConnection<T> {
         }
         return 0;
     }
+    public String getProductInformation(){
+        try (Connection con = DriverManager.getConnection(urlConnection))
+        {
+            String query = "Select productname,productcontent from product";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while (rs.next())
+            {
+                strReturn +="<html> Name: "+rs.getString("productname")+"<br>"+" Content :"+rs.getString("productcontent")+"</html>";
+                strReturn += ",";
+            }
+            strReturn = strReturn.substring(0,strReturn.length()-1);
+            return strReturn;
+
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return "";
+    }
+    public String getStoreAddress()
+    {
+        try(Connection con = DriverManager.getConnection(urlConnection))
+        {
+            String query = "Select storename,storeaddress from store";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while(rs.next())
+            {
+                strReturn +="<html> Store: "+rs.getString("storename") +"<br>"+"Address: "+rs.getString("storeaddress")+"</html>";
+                strReturn += ",";
+            }
+            strReturn = strReturn.substring(0,strReturn.length()-1);
+            return strReturn;
+
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return "";
+    }
     public String getComboboxString (String query)
     {
         try(Connection con = DriverManager.getConnection(urlConnection))
@@ -88,6 +129,23 @@ public class DBConnection<T> {
         {
             e.printStackTrace();
         }return "";
+    }
+    public Timestamp getDate(String query)
+    {
+        try(Connection con = DriverManager.getConnection(urlConnection))
+        {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            Timestamp timeReturn = null;
+            while(rs.next())
+            {
+                timeReturn = rs.getTimestamp(1);
+            }
+            return timeReturn;
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }return null;
     }
     public boolean check(String query){
         try (Connection con = DriverManager.getConnection(urlConnection)){ ;

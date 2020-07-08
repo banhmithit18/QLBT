@@ -13,8 +13,7 @@ public class AddEmployeeForm extends JDialog {
     JPasswordField pfPassword;
     public AddEmployeeForm (){
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setUIFont setFont = new setUIFont();
-        setFont.Font(new FontUIResource("Arial",Font.PLAIN,12));
+        setUIFont.Font(new FontUIResource("Arial",Font.PLAIN,12));
         setResizable(false);// hide icon java at the corner
         setTitle("Register");
         setBounds(100,100,500,400);
