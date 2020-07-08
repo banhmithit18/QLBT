@@ -14,8 +14,11 @@ public class TableDepot extends TableForm {
         {
             if(this.btnEdit.get(i).equals(e.getSource()))
             {
-                System.out.println(i);
+                System.out.println(((JLabel)pnlData.get(i).getComponent(1)).getText());
+                /// i = so thu tu cua dong
+                /// 1 tuong duong voi so thu tu cua cot (vd o day la name)
             }
+
         }
     }
     public ArrayList<JLabel> getLabels() {
