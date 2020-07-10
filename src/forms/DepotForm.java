@@ -7,6 +7,8 @@ import utils.setUIFont;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class DepotForm extends JDialog {
     int row;
@@ -41,17 +43,15 @@ public class DepotForm extends JDialog {
 
         //add component to panel head
 
-        JTextField tfSearch = new JTextField();
-        tfSearch.setBounds(10, 40, 200, 25);
-        pnlHead.add(tfSearch);
+
 
         String[] boxColumn = {"All","ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
 
-        JButton btnSearch = new JButton("Search");
-        btnSearch.setBounds(120, 80, 120, 25);
+//        JButton btnSearch = new JButton("Search");
+//        btnSearch.setBounds(120, 80, 120, 25);
 
         //add JPanel body
         JPanel pnlBody = new JPanel();
@@ -64,44 +64,86 @@ public class DepotForm extends JDialog {
         d = new Dimension(115, 20);
         tp = new TableDepot();
         JScrollPane sp = tp.table("depot", columnname, query, d, true);
+
         //tao su kien search
-        btnSearch.addActionListener(e -> {
-            DBConnection db = new DBConnection();
-            ChangePosition c = new ChangePosition();
-            int position = 0;
-            int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
-            String strSearch = tfSearch.getText(); // lay text trong text field
-            row = db.getRowCount("depot"); // lay so hang
-            int column = 0;
-            if (index == 0 ) // tuong duong voi All trong boxSearch
-            {
-                for (JPanel item : tp.pnlData
-                ) {
-                    item.show();
-                }
-            } else {
-                for (int i = 0; i < row; i++) {
-                    if (tp.getLabels().get(index-1 + column).getText().matches(".*" + strSearch + ".*"))
-                    {
-                        tp.pnlData.get(i).show();
-                        for (int secondIndex = 0; secondIndex < tp.pnlAllData.getComponentCount(); secondIndex++) {
-                            if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData.get(i))) {
-                                c.swap(tp.pnlAllData, position, secondIndex);
-                                position++;
-                            }
-                        }
-                    } else {
-                        tp.pnlData.get(i).hide();
+        JTextField tfSearch = new JTextField();
+        tfSearch.setBounds(10, 40, 200, 25);
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                DBConnection db = new DBConnection();
+                ChangePosition c = new ChangePosition();
+                int position = 0;
+                int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
+                String strSearch = tfSearch.getText(); // lay text trong text field
+                row = db.getRowCount("depot"); // lay so hang
+                int column = 0;
+                if (index == 0 ) // tuong duong voi All trong boxSearch
+                {
+                    for (JPanel item : tp.pnlData
+                    ) {
+                        item.show();
                     }
-                    column += tp.column;
+                } else {
+                    for (int i = 0; i < row; i++) {
+                        if (tp.getLabels().get(index-1 + column).getText().matches(".*" + strSearch + ".*"))
+                        {
+                            tp.pnlData.get(i).show();
+                            for (int secondIndex = 0; secondIndex < tp.pnlAllData.getComponentCount(); secondIndex++) {
+                                if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData.get(i))) {
+                                    c.swap(tp.pnlAllData, position, secondIndex);
+                                    position++;
+                                }
+                            }
+                        } else {
+                            tp.pnlData.get(i).hide();
+                        }
+                        column += tp.column;
+                    }
+                    //redraw lai panel
+                    tp.pnlAllData.revalidate();
+                    tp.pnlAllData.repaint();
                 }
-                //redraw lai panel
-                tp.pnlAllData.revalidate();
-                tp.pnlAllData.repaint();
             }
 
+            @Override
+            public void keyReleased(KeyEvent e) {
+                DBConnection db = new DBConnection();
+                ChangePosition c = new ChangePosition();
+                int position = 0;
+                int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
+                String strSearch = tfSearch.getText(); // lay text trong text field
+                row = db.getRowCount("depot"); // lay so hang
+                int column = 0;
+                if (index == 0 ) // tuong duong voi All trong boxSearch
+                {
+                    for (JPanel item : tp.pnlData
+                    ) {
+                        item.show();
+                    }
+                } else {
+                    for (int i = 0; i < row; i++) {
+                        if (tp.getLabels().get(index-1 + column).getText().matches(".*" + strSearch + ".*"))
+                        {
+                            tp.pnlData.get(i).show();
+                            for (int secondIndex = 0; secondIndex < tp.pnlAllData.getComponentCount(); secondIndex++) {
+                                if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData.get(i))) {
+                                    c.swap(tp.pnlAllData, position, secondIndex);
+                                    position++;
+                                }
+                            }
+                        } else {
+                            tp.pnlData.get(i).hide();
+                        }
+                        column += tp.column;
+                    }
+                    //redraw lai panel
+                    tp.pnlAllData.revalidate();
+                    tp.pnlAllData.repaint();
+                }
+            }
         });
-        pnlHead.add(btnSearch);
+        pnlHead.add(tfSearch);
         pnlBody.add(sp);
 
         JButton btnImport = new JButton("Import");

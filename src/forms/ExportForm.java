@@ -57,7 +57,7 @@ public class ExportForm extends JDialog {
         comboBox_2.addActionListener(e -> {
             try{
                 Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
-                quantityLeft = Quantity+ " left";
+                quantityLeft = "Remaining: "+Quantity;
                 lblNewLabel_5.setText(quantityLeft);
             }catch (Exception ex)
             {
@@ -170,15 +170,25 @@ public class ExportForm extends JDialog {
                               textField.setText(null);
                               textField_1.setText(null);
                                   int column = 0;
+                                  int sum = 0;
                                   int row = DepotForm.tp.row;
                                   for (int i = 0; i < row; i++) {
+                                      // su kien sua
                                       if (DepotForm.tp.getLabels().get(column).getText().equals(importId)) {
                                           int newQuantity = Integer.parseInt(DepotForm.tp.labels.get(3 + column).getText()) - quantity ;
                                           DepotForm.tp.labels.get(3 + column).setText(String.valueOf(newQuantity));
-
+                                      }
+                                      /// su kien kiem tra
+                                      if(DepotForm.tp.getLabels().get(column).getText().equals(productId))
+                                      {
+                                          sum += Integer.parseInt(DepotForm.tp.labels.get(3+column).getText());
                                       }
                                       column += DepotForm.tp.column;
-                                  } 
+                                  }
+                                  if ( sum <10)
+                                  {
+                                      JOptionPane.showMessageDialog(rootPane,"Product :"+productId+" is nearly out of stock. The The remaining stock :"+sum);
+                                  }
                               if(!db.check("Select importid from inventory where importid ='"+importId+"'"))
                               {
                                   inventory inv = new inventory();
