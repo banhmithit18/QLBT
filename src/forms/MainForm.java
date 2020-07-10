@@ -9,7 +9,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class  MainForm extends JFrame {
-    JPanel contentPane;
+    private JPanel contentPane;
+    private JPanel pnlContent;
     public MainForm(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100,1309, 680);
