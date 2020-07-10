@@ -68,7 +68,7 @@ public class ExportForm extends JDialog {
         add(comboBox_2);
 
         Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
-        quantityLeft = Quantity+ " left";
+        quantityLeft = "Remaining: "+ Quantity;
         lblNewLabel_5.setText(quantityLeft);
 
         JLabel lblNewLabel_1 = new JLabel("Product");
@@ -80,12 +80,13 @@ public class ExportForm extends JDialog {
         String [] productToolTipArr = db.getProductInformation("depot").split(",");
         comboBox_1.addActionListener(e -> {
             try{
-                Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
-                quantityLeft = Quantity+ " left";
-                lblNewLabel_5.setText(quantityLeft);
                 String productid = comboBox_1.getSelectedItem().toString();
                 String [] newStrImport = db.getComboboxString("Select importid from depot where productid = '"+productid+"'").split(",");
                 comboBox_2.setModel(new DefaultComboBoxModel(newStrImport));
+                Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
+                quantityLeft = "Remaining: "+Quantity;
+                lblNewLabel_5.setText(quantityLeft);
+
             }catch (Exception ex)
             {
                 ex.printStackTrace();
@@ -165,7 +166,7 @@ public class ExportForm extends JDialog {
                           {
                               JOptionPane.showMessageDialog(rootPane,"Create sucessfully");
                               Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
-                              quantityLeft = Quantity+ " left";
+                              quantityLeft = "Remaining: "+Quantity;
                               lblNewLabel_5.setText(quantityLeft);
                               textField.setText(null);
                               textField_1.setText(null);
@@ -176,18 +177,31 @@ public class ExportForm extends JDialog {
                                       // su kien sua
                                       if (DepotForm.tp.getLabels().get(column).getText().equals(importId)) {
                                           int newQuantity = Integer.parseInt(DepotForm.tp.labels.get(3 + column).getText()) - quantity ;
-                                          DepotForm.tp.labels.get(3 + column).setText(String.valueOf(newQuantity));
+                                          if(newQuantity >0) {
+                                              DepotForm.tp.labels.get(3 + column).setText(String.valueOf(newQuantity));
+                                          }
+                                          else
+                                          {
+                                              DepotForm.tp.labels.get(3 + column).setText("0");
+                                              DepotForm.tp.getPnlAllData().remove(i);
+                                              DepotForm.tp.pnlAllData.repaint();
+                                              DepotForm.tp.getPnlAllData().revalidate();
+                                          }
                                       }
                                       /// su kien kiem tra
-                                      if(DepotForm.tp.getLabels().get(column).getText().equals(productId))
+                                      String productName = db.getName("Select productname from product where productid ='"+productId+"'");
+                                      // column + 1 = ten product tren table
+                                      if(DepotForm.tp.getLabels().get(column+1).getText().equals(productName))
                                       {
+                                          // tinh tong bang tong so luong loai thuoc do
                                           sum += Integer.parseInt(DepotForm.tp.labels.get(3+column).getText());
                                       }
                                       column += DepotForm.tp.column;
                                   }
+                                  // neu tong < 10 se chay su kien
                                   if ( sum <10)
                                   {
-                                      JOptionPane.showMessageDialog(rootPane,"Product :"+productId+" is nearly out of stock. The The remaining stock :"+sum);
+                                      JOptionPane.showMessageDialog(rootPane,"Product :"+productId+" is nearly out of stock. The remaining stock :"+sum);
                                   }
                               if(!db.check("Select importid from inventory where importid ='"+importId+"'"))
                               {
@@ -201,6 +215,7 @@ public class ExportForm extends JDialog {
                                   inv.setQuantity(quantity);
                                   inv.setPrice(Integer.parseInt(price));
                                   inv.setExportdate(db.getDate("Select date from export where exportid ='" + exportid + "'"));
+                                  db.Create(inv);
                               }
                           }
                       }
