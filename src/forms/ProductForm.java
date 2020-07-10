@@ -72,6 +72,7 @@ public class ProductForm extends JPanel {
         JPanel pnlInventory = new JPanel();
         pnlInventory.setLayout(new GridLayout(1,0));
         tabbedPane.addTab("Inventory", null, pnlInventory, null);
+        pnlInventory.add(new DepotForm());
         setVisible(true);
     }
 }

@@ -1,13 +1,18 @@
 package forms;
 
+import utils.ChangePosition;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.jar.JarFile;
 
 public class SellForm extends JFrame {
+    int row;
+    public static Dimension d;
+    public static TableDepot tp;
     private JTextField tftSearch, tftCusName;
     public SellForm(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,6 +137,19 @@ public class SellForm extends JFrame {
         pnlPey.add(pnlStartPayment);
         pnlStartPayment.setLayout(null);
 
+        JPanel pnlTable = new JPanel();
+        pnlTable.setLayout(new GridLayout(0,1));
+        pnlTable.setBorder(new LineBorder(new Color(0,0,0),1));
+        pnlTable.setBounds(10, 379, 855, 220);
+        Contentpane.add(pnlTable);
+        String query = "select productid, productname, productcontent, supplier.suppliername from product inner join supplier on product.supplierid = supplier.supplierid";
+        String[] columnname = {"productid", "productname", "productcontent", "supplier"};
+
+        d = new Dimension(164, 20);
+        tp = new TableDepot();
+        JScrollPane sp = tp.table("product", columnname, query, d, true);
+        pnlTable.add(sp);
+
         JButton btnNewButton = new JButton("New button");
         btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 30));
         btnNewButton.setBounds(0, 0, 396, 60);
@@ -156,6 +174,48 @@ public class SellForm extends JFrame {
                 super.mouseExited(e);
                 pnlStartPayment.setBackground(new Color(0, 204, 51));
             }
+        });
+
+
+        JButton btnSearch = new JButton("Search");
+//        btnSearch.addActionListener(e -> {
+//            ChangePosition c = new ChangePosition();
+//            int position = 0;
+//            int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
+//            String strSearch = tfSearch.getText(); // lay text trong text field
+//            row = tp.row; // lay so hang
+//            int column = 0;
+//            if (index == 0 ) // tuong duong voi All trong boxSearch
+//            {
+//                for (JPanel item : tp.pnlData
+//                ) {
+//                    item.show();
+//                }
+//            } else {
+//                for (int i = 0; i < row; i++) {
+//                    if (tp.getLabels().get(index-1 + column).getText().matches(".*" + strSearch + ".*"))
+//                    {
+//                        tp.pnlData.get(i).show();
+//                        for (int secondIndex = 0; secondIndex < tp.pnlAllData.getComponentCount(); secondIndex++) {
+//                            if (tp.pnlAllData.getComponent(secondIndex) == (tp.pnlData.get(i))) {
+//                                c.swap(tp.pnlAllData, position, secondIndex);
+//                                position++;
+//                            }
+//                        }
+//                    } else {
+//                        tp.pnlData.get(i).hide();
+//                    }
+//                    column += tp.column;
+//                }
+//                //redraw lai panel
+//                tp.pnlAllData.revalidate();
+//                tp.pnlAllData.repaint();
+//            }
+//
+//        });
+        btnSearch.setBounds(403, 10, 92, 31);
+        pnlHeader.add(btnSearch);
+        tftSearch.addKeyListener(new KeyAdapter() {
         });
 
         setVisible(true);

@@ -1,5 +1,7 @@
 package forms;
 
+import utils.ChangePosition;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -7,12 +9,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PartnerForm extends JPanel {
+    JPanel pnlContent_2;
+
     public PartnerForm(){
         setBounds(0,0,1110, 643);
         setLayout(null);
 
         JPanel pnlTitle = new JPanel();
-        pnlTitle.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        pnlTitle.setBorder(new LineBorder(new Color(0, 0, 0), 1));
         pnlTitle.setBounds(0,0,1110, 82);
         pnlTitle.setBackground(new Color(52, 235, 58));
         add(pnlTitle);
@@ -24,7 +28,7 @@ public class PartnerForm extends JPanel {
         pnlTitle.add(lblTitle);
 
         JPanel pnlContent = new JPanel();
-        pnlContent.setBackground(Color.LIGHT_GRAY);
+        pnlContent.setBorder(new LineBorder(new Color(0, 0, 0), 1));
         pnlContent.setBounds(0, 82, 1110, 561);
         add(pnlContent);
         pnlContent.setLayout(null);
@@ -77,7 +81,10 @@ public class PartnerForm extends JPanel {
         btnSupplier.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
+                pnlContent_2.removeAll();
+                pnlContent_2.add(new SupplierForm());
+                pnlContent_2.repaint();
+                pnlContent_2.validate();
             }
 
             @Override
@@ -93,11 +100,12 @@ public class PartnerForm extends JPanel {
             }
         });
 
-        JPanel pnlContent_2 = new JPanel();
-        pnlContent_2.setBackground(Color.LIGHT_GRAY);
-        pnlContent_2.setBounds(0, 74, 1110, 487);
+        pnlContent_2 = new JPanel();
+        pnlContent_2.setBounds(2, 74, 1098, 485);
+//        pnlContent_2.setBorder(new LineBorder(new Color(0,0,0),1));
         pnlContent.add(pnlContent_2);
         pnlContent_2.setLayout(null);
+
         setVisible(true);
     }
 }

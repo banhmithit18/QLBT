@@ -9,6 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class EmployeeForm extends JPanel {
+    int row;
+    public static Dimension d;
+    public static TableDepot tp;
     private JTextField tfEmployeeID,tfEmployeePhone,tfEmployeeMail;
     public EmployeeForm(){
         setBounds(0,0,1110, 643);
@@ -90,7 +93,14 @@ public class EmployeeForm extends JPanel {
         JPanel pnlTable_Employee = new JPanel();
         pnlTable_Employee.setBorder(new LineBorder(new Color(0, 0, 0)));
         pnlTable_Employee.setBounds(260, 50, 850, 437);
+        pnlTable_Employee.setLayout(new GridLayout(0,1));
         pnlContent.add(pnlTable_Employee);
+        String[] columnname = {"employeename", "employeeage", "employeephone", "employeeemail", "employeeaddress", "city"};
+        String query = "select employeename , employeeage, employeephone, employeeemail, employeeaddress, city.cityname from employee inner join city on employee.city = city.cityid";
+        d = new Dimension(164, 20);
+        tp = new TableDepot();
+        JScrollPane sp = tp.table("supplier", columnname, query, d, true);
+        pnlTable_Employee.add(sp);
 
         JPanel pnl_BtnSearch = new JPanel();
         pnl_BtnSearch.setBounds(65, 373, 132, 46);

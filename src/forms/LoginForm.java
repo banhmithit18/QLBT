@@ -4,84 +4,141 @@ import utils.DBConnection;
 import utils.setUIFont;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class LoginForm extends JFrame {
-        JPanel defaultpnl;
-        JTextField tfUser;
-        JPasswordField pfPass;
-        JButton btnLog;
+        JPanel contentPane;
+        JTextField tfUser,tftUsername;
+        JPasswordField tpPass;
         JLabel lblWarn;
         char originalEchoChar;
         public String UserId;
         static String userName;
 
         public LoginForm() {
-            setDefaultCloseOperation(EXIT_ON_CLOSE);
-            setUIFont font = new setUIFont();
-            font.Font(new FontUIResource("Arial",Font.PLAIN,12));
-            setTitle("Login");
-            Image icon = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB_PRE);
-            setIconImage(icon);
-            defaultpnl = (JPanel) getContentPane();
-            defaultpnl.setLayout(null);
-            setBounds(150, 150, 300, 300);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setBounds(100, 100, 484, 557);
+            contentPane = new JPanel();
+            contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+            setContentPane(contentPane);
+            contentPane.setLayout(null);
 
-            JLabel lblUser = new JLabel("Username");
-            lblUser.setBounds(10, 0, 70, 30);
-            defaultpnl.add(lblUser);
-            tfUser = new JTextField();
-            tfUser.setBounds(80, 5, 140, 20);
-            defaultpnl.add(tfUser);
+            JPanel pnlHeader = new JPanel();
+            pnlHeader.setBackground(new Color(52, 235, 58));
+            pnlHeader.setBounds(0, 0, 470, 147);
+            contentPane.add(pnlHeader);
+            pnlHeader.setLayout(null);
 
-            JLabel lblPass = new JLabel("Password");
-            lblPass.setBounds(10, 30, 70, 30);
-            defaultpnl.add(lblPass);
-            pfPass = new JPasswordField();
-            pfPass.setBounds(80, 35, 140, 20);
-            defaultpnl.add(pfPass);
-            JRadioButton chkPass = new JRadioButton();
-            chkPass.setBounds(230, 30, 30, 30);
-            originalEchoChar = pfPass.getEchoChar();
-            chkPass.setToolTipText("Show password");
-            chkPass.addActionListener(e -> {
-                if (chkPass.isSelected()) {
+            JLabel lblLogin = new JLabel("Login");
+            lblLogin.setFont(new Font("Tahoma", Font.BOLD, 30));
+            lblLogin.setBounds(190, 57, 110, 43);
+            pnlHeader.add(lblLogin);
 
-                    pfPass.setEchoChar((char) 0);
-                    chkPass.setToolTipText("Hide password");
-                } else {
-                    pfPass.setEchoChar(originalEchoChar);
-                    chkPass.setToolTipText("Show password");
+            JLabel lblIcon = new JLabel("");
+            lblIcon.setIcon(new ImageIcon("src\\icon\\IconLogin.png"));
+            lblIcon.setBounds(194, 170, 90, 90);
+            contentPane.add(lblIcon);
+
+            JLabel lblUsername = new JLabel("Username:");
+            lblUsername.setFont(new Font("Tahoma", Font.BOLD, 10));
+            lblUsername.setBounds(116, 296, 66, 21);
+            contentPane.add(lblUsername);
+
+            JLabel lblPass = new JLabel("Password:");
+            lblPass.setFont(new Font("Tahoma", Font.BOLD, 10));
+            lblPass.setBounds(116, 351, 66, 21);
+            contentPane.add(lblPass);
+
+            tftUsername = new JTextField();
+            tftUsername.setOpaque(false);
+            tftUsername.setBounds(211, 297, 156, 19);
+            tftUsername.setBorder(BorderFactory.createMatteBorder(0,0, 1,0,Color.black));
+            contentPane.add(tftUsername);
+            tftUsername.setColumns(10);
+
+            tpPass = new JPasswordField();
+            tpPass.setOpaque(false);
+            tpPass.setColumns(10);
+            tpPass.setBorder(BorderFactory.createMatteBorder(0,0, 1,0,Color.black));
+            tpPass.setBounds(211, 352, 156, 19);
+            contentPane.add(tpPass);
+
+            JPanel pnlLogin = new JPanel();
+            pnlLogin.setBackground(new Color(52, 235, 58));
+            pnlLogin.setBounds(158, 436, 168, 30);
+            contentPane.add(pnlLogin);
+            pnlLogin.setLayout(null);
+
+            JButton btnLogin = new JButton("Login");
+            btnLogin.setContentAreaFilled(false);
+            btnLogin.setBorderPainted(false);
+            btnLogin.setFocusPainted(false);
+            btnLogin.setBounds(0, 0, 168, 30);
+            pnlLogin.add(btnLogin);
+
+//            JLabel lblForgotPass = new JLabel("Do not have an account ?");
+//            lblForgotPass.setFont(new Font("Tahoma", Font.BOLD, 10));
+//            lblForgotPass.setForeground(Color.RED);
+//            lblForgotPass.setBounds(178, 486, 190, 13);
+//            contentPane.add(lblForgotPass);
+//            lblForgotPass.addMouseListener(new MouseAdapter() {
+//                @Override
+//                public void mouseClicked(MouseEvent e) {
+//                    super.mouseClicked(e);
+//                }
+//
+//                @Override
+//                public void mouseEntered(MouseEvent e) {
+//                    super.mouseEntered(e);
+//                    lblForgotPass.setForeground(Color.BLACK);
+//                }
+//
+//                @Override
+//                public void mouseExited(MouseEvent e) {
+//                    super.mouseExited(e);
+//                    lblForgotPass.setForeground(Color.RED);
+//                }
+//            });
+
+            lblWarn = new JLabel("");
+            lblWarn.setBounds(176, 400, 168, 13);
+            contentPane.add(lblWarn);
+            btnLogin.addActionListener(this::actionLogin);
+            btnLogin.addMouseListener(new MouseAdapter() {
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    pnlLogin.setBackground(new Color(27, 114, 28));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    super.mouseExited(e);
+                    pnlLogin.setBackground(new Color(52, 235, 58));
                 }
             });
-            defaultpnl.add(chkPass);
-            btnLog = new JButton("Login");
-            btnLog.setBackground(new Color (0,124,253));
-            btnLog.setForeground(Color.white);
-            btnLog.setBounds(100, 65, 100, 20);
-            btnLog.addActionListener(this::actionLogin);
-            defaultpnl.add(btnLog);
 
-            lblWarn = new JLabel();
-            lblWarn.setBounds(70, 95, 180, 30);
-            defaultpnl.add(lblWarn);
             setVisible(true);
         }
 
         public void actionLogin(ActionEvent e) {
-            String username = tfUser.getText();
-            String password = pfPass.getText();
+            String username = tftUsername.getText();
+            String password = tpPass.getText();
             DBConnection db = new DBConnection();
             if (db.check("Select username from employee where username ='"+username+"'")) {
                 if (db.check("Select password from employee where username ='"+username+"' and password ='"+password+"'")) {
                     userName = username;
-                    UserId = tfUser.getText();
-                    tfUser.setText(null);
-                    pfPass.setText(null);
-                    pfPass.setEchoChar(originalEchoChar);
+                    UserId = tftUsername.getText();
+                    tftUsername.setText(null);
+                    tpPass.setText(null);
+                    tpPass.setEchoChar(originalEchoChar);
                     setVisible(false);
 
                 } else {
