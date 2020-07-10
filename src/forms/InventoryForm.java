@@ -7,22 +7,25 @@ import utils.setUIFont;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class DepotForm extends JPanel {
+public class InventoryForm extends JDialog {
     int row;
     public static Dimension d;
     public static TableDepot tp;
-    public DepotForm() {
+    public InventoryForm(String storeId) {
         //setting form
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setBounds(100, 100, 1000, 500);
+        setModal(true);
+        setResizable(false);
         setUIFont f = new setUIFont();
         f.Font(new FontUIResource("Arial", Font.PLAIN, 12));
+        setTitle("Depot");
         //add root panel
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        JPanel rootPnl = (JPanel) getContentPane();
+        rootPnl.setLayout(new BoxLayout(rootPnl, BoxLayout.Y_AXIS));
         //create box
         Box[] boxes = new Box[2];
         boxes[0] = Box.createHorizontalBox();
@@ -31,8 +34,8 @@ public class DepotForm extends JPanel {
         boxes[0].createGlue();
         boxes[1].createGlue();
 
-        this.add(boxes[0]);
-        this.add(boxes[1]);
+        rootPnl.add(boxes[0]);
+        rootPnl.add(boxes[1]);
 
         //add JPanel head
         JPanel pnlHead = new JPanel();
@@ -40,22 +43,14 @@ public class DepotForm extends JPanel {
 
         //add component to panel head
 
-
+        JTextField tfSearch = new JTextField();
+        tfSearch.setBounds(10, 40, 200, 25);
+        pnlHead.add(tfSearch);
 
         String[] boxColumn = {"All","ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
-        boxSearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(boxSearch.getSelectedIndex() == 0){
-                    tfSearch.setEditable(false);
-                }else {
-                    tfSearch.setEditable(true);
-                }
-            }
-        });
 
 //        JButton btnSearch = new JButton("Search");
 //        btnSearch.setBounds(120, 80, 120, 25);
@@ -65,16 +60,13 @@ public class DepotForm extends JPanel {
         pnlBody.setLayout(new GridLayout(1, 0));
         //add component to panel body
         String[] columnname = {"ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
-        String query = "select importid,productname , productcontent, depot.quantity, depot.price, suppliername,importdate,expirationdate\n" +
-                "from depot join product on  depot.productid = product.productid\n" +
-                "join supplier on product.supplierid = supplier.supplierid";
+        String query = "select importid,productname , productcontent, inventory.quantity, inventory.price, suppliername,exportdate,expirationdate\n" +
+                "from inventory join product on  inventory.productid = product.productid\n" +
+                "join supplier on product.supplierid = supplier.supplierid where storeid ="+storeId;
         d = new Dimension(115, 20);
         tp = new TableDepot();
-        JScrollPane sp = tp.table("depot", columnname, query, d, true);
-
+        JScrollPane sp = tp.table("inventory", columnname, query, d, true);
         //tao su kien search
-        JTextField tfSearch = new JTextField();
-        tfSearch.setBounds(10, 40, 200, 25);
         tfSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -83,7 +75,7 @@ public class DepotForm extends JPanel {
                 int position = 0;
                 int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
                 String strSearch = tfSearch.getText(); // lay text trong text field
-                row = db.getRowCount("depot"); // lay so hang
+                row = db.getRowCount("inventory"); // lay so hang
                 int column = 0;
                 if (index == 0 ) // tuong duong voi All trong boxSearch
                 {
@@ -120,7 +112,7 @@ public class DepotForm extends JPanel {
                 int position = 0;
                 int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
                 String strSearch = tfSearch.getText(); // lay text trong text field
-                row = db.getRowCount("depot"); // lay so hang
+                row = db.getRowCount("inventory"); // lay so hang
                 int column = 0;
                 if (index == 0 ) // tuong duong voi All trong boxSearch
                 {
@@ -150,22 +142,8 @@ public class DepotForm extends JPanel {
                 }
             }
         });
-        pnlHead.add(tfSearch);
+
         pnlBody.add(sp);
-
-        JButton btnImport = new JButton("Import");
-        btnImport.setBounds(500,40,80,25);
-        btnImport.addActionListener(e -> {
-            ImportForm im = new ImportForm();
-
-        });
-        pnlHead.add(btnImport);
-        JButton btnExport = new JButton("Export");
-        btnExport.setBounds(600,40,80,25);
-        btnExport.addActionListener(e -> {
-            ExportForm ex = new ExportForm();
-        });
-        pnlHead.add(btnExport);
 
         //add 2 panel to box
         pnlBody.setPreferredSize(new Dimension(1300, 400));
@@ -176,5 +154,4 @@ public class DepotForm extends JPanel {
 
         setVisible(true);
     }
-
 }

@@ -15,8 +15,7 @@ public class AddProductForm extends JDialog {
         setTitle("Add Product");
         setResizable(false);
         setLayout(null);
-        setUIFont f = new setUIFont();
-        f.Font(new FontUIResource("Arial", Font.PLAIN, 12));
+        setUIFont.Font(new FontUIResource("Arial", Font.PLAIN, 12));
         setBounds(100, 100, 400, 450);
         JLabel lblProductId = new JLabel("Product ID");
         lblProductId.setBounds(30, 10, 80, 25);

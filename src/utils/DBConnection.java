@@ -1,12 +1,12 @@
 package utils;
 
 import java.lang.reflect.Field;
-import java.security.interfaces.RSAKey;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DBConnection<T> {
     private String urlConnection = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
+
     /// lay so dong
     public int getRowCount(String table) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {
@@ -23,10 +23,71 @@ public class DBConnection<T> {
         }
         return 0;
     }
-    public String getComboboxString (String query)
-    {
-        try(Connection con = DriverManager.getConnection(urlConnection))
-        {
+
+    public String getProductInformation(String table) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            String query = "";
+            if (table.equals("product")) {
+                query = "select distinct  productid,productname,productcontent from product";
+            } else {
+                query = "Select distinct depot.productid,productname,productcontent from " + table + " join product on product.productid = " + table + ".productid";
+            }
+
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while (rs.next()) {
+                strReturn += "<html> Name: " + rs.getString("productname") + "<br>" + " Content :" + rs.getString("productcontent") + "</html>";
+                strReturn += ",";
+            }
+            strReturn = strReturn.substring(0, strReturn.length() - 1);
+            return strReturn;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String getSupplierInformation() {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            String query = "Select suppliername,supplieraddress from supplier";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while (rs.next()) {
+                strReturn += "<html> Supplier: " + rs.getString("suppliername") + "<br>" + "Address: " + rs.getString("supplieraddress") + " </html>";
+                strReturn += ",";
+            }
+            strReturn = strReturn.substring(0, strReturn.length() - 1);
+            return strReturn;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getStoreAddress() {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            String query = "Select storename,storeaddress,cityname from store join city on store.cityid = city.cityid";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            String strReturn = "";
+            while (rs.next()) {
+                strReturn += "<html> Store: " + rs.getString("storename") + "<br>" + "Address: " + rs.getString("storeaddress") + "<br> City: " + rs.getString("cityname") + "</html>";
+                strReturn += ",";
+            }
+            strReturn = strReturn.substring(0, strReturn.length() - 1);
+            return strReturn;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public String getComboboxString(String query) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             String strReturn = "";
@@ -36,92 +97,100 @@ public class DBConnection<T> {
             strReturn = strReturn.substring(0, strReturn.length() - 1); //loai bo dau phay cuoi
             return strReturn;
 
-        }catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }return "";
+        }
+        return "";
     }
-    public String getName(String query)
-    {
-        try(Connection con = DriverManager.getConnection(urlConnection))
-        {
+
+    public String getName(String query) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            while(rs.next())
-            {
+            while (rs.next()) {
                 return rs.getString(1);
             }
-        }catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }return "";
+        }
+        return "";
     }
-    public int getID(String query)
-    {
-        try (Connection con = DriverManager.getConnection(urlConnection))
-        {
+
+    public int getID(String query) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            while(rs.next())
-            {
+            while (rs.next()) {
                 return rs.getInt(1);
             }
-        }catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }return 0;
+        }
+        return 0;
     }
-    public String getUnit(){
-        try (Connection con = DriverManager.getConnection(urlConnection))
-        {
+
+    public String getUnit() {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
             String query = "Select value,unitname,unitconvertvalue,unitconvertname from unit";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             String strReturn = "";
-            while(rs.next())
-            {
-                strReturn += rs.getInt("value")+ " "+rs.getString("unitname")+" = "+rs.getInt("unitconvertvalue")+" "+rs.getString("unitconvertname")+",";
+            while (rs.next()) {
+                strReturn += rs.getInt("value") + " " + rs.getString("unitname") + " = " + rs.getInt("unitconvertvalue") + " " + rs.getString("unitconvertname") + ",";
             }
-            strReturn = strReturn.substring(0,strReturn.length());
+            strReturn = strReturn.substring(0, strReturn.length());
             return strReturn;
-        }catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
-        }return "";
+        }
+        return "";
     }
-    public boolean check(String query){
-        try (Connection con = DriverManager.getConnection(urlConnection)){ ;
+
+    public Timestamp getDate(String query) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            if (rs.next())
-            {
+            Timestamp timeReturn = null;
+            while (rs.next()) {
+                timeReturn = rs.getTimestamp(1);
+            }
+            return timeReturn;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean check(String query) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            ;
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
                 return true;
             }
-        }catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
-    public boolean updatePassword(String username, String password)
-    { try(Connection con = DriverManager.getConnection(urlConnection))
-    {
-        String query = "update employee set password = '"+password+"' where username ='"+username+"'";
-        Statement stmt = con.createStatement();
-        int check = stmt.executeUpdate(query);
-        if ( check!= 0)
-        {
-            return  true;
+
+    public boolean updatePassword(String username, String password) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            String query = "update employee set password = '" + password + "' where username ='" + username + "'";
+            Statement stmt = con.createStatement();
+            int check = stmt.executeUpdate(query);
+            if (check != 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        else
-        {
-            return false;
-        }
-    }catch (SQLException e )
-    {
-        e.printStackTrace();
-    }return false;
+        return false;
     }
+
     public boolean Create(T item) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {
             Class<?> classInfo = item.getClass();
@@ -143,7 +212,7 @@ public class DBConnection<T> {
 
                 } else if (fieldItem.getType().equals(Timestamp.class)) {
                     query += "'" + fieldItem.get(item) + "',";
-                } else if (fieldItem.getType().equals(int.class)||fieldItem.getType().equals(float.class)) {
+                } else if (fieldItem.getType().equals(int.class) || fieldItem.getType().equals(float.class)) {
                     query += fieldItem.get(item) + ",";
                 }
 
@@ -163,6 +232,7 @@ public class DBConnection<T> {
         }
         return false;
     }
+
     // lay du lieu
     public ArrayList<Object> getAllData(String query) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {
