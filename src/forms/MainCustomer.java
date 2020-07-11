@@ -8,19 +8,19 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 
-public class DepotForm extends JDialog {
+public class MainCustomer extends JDialog {
     int row;
     public static Dimension d;
-    public static TableDepot tp;
-    public DepotForm() {
+    public static TableCustomer tp;
+    public MainCustomer() {
         //setting form
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setBounds(100, 100, 1000, 500);
+        setBounds(350, 100, 824, 500);
         setModal(true);
         setResizable(false);
         setUIFont f = new setUIFont();
         f.Font(new FontUIResource("Arial", Font.PLAIN, 12));
-        setTitle("Depot");
+        setTitle("Customer");
         //add root panel
         JPanel rootPnl = (JPanel) getContentPane();
         rootPnl.setLayout(new BoxLayout(rootPnl, BoxLayout.Y_AXIS));
@@ -39,31 +39,45 @@ public class DepotForm extends JDialog {
         JPanel pnlHead = new JPanel();
         pnlHead.setLayout(null);
 
+
+        JLabel lbl_managercustomer = new JLabel("Manager Customer");
+        lbl_managercustomer.setForeground(new Color(0, 0, 0));
+        lbl_managercustomer.setFont(new Font("Tahoma", Font.BOLD, 20));
+        lbl_managercustomer.setBounds(320, 10, 198, 59);
+        pnlHead.add(lbl_managercustomer);
+
         //add component to panel head
 
         JTextField tfSearch = new JTextField();
-        tfSearch.setBounds(10, 40, 200, 25);
+        tfSearch.setBounds(270, 81, 200, 25);
         pnlHead.add(tfSearch);
 
-        String[] boxColumn = {"All","ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
+        String[] boxColumn = {"All","Name", "Age", "Phone", "Email", "Address","City"};
         JComboBox boxSearch = new JComboBox(boxColumn);
-        boxSearch.setBounds(230, 40, 120, 25);
+        boxSearch.setBounds(140, 80, 120, 25);
         pnlHead.add(boxSearch);
 
         JButton btnSearch = new JButton("Search");
-        btnSearch.setBounds(120, 80, 120, 25);
+        btnSearch.setBounds(10, 80, 120, 25);
+
+        JButton btnADD = new JButton("Add");
+        btnADD.setBounds(600,80,80,25);
+        btnADD.addActionListener(e -> {
+
+        });
+        pnlHead.add(btnADD);
 
         //add JPanel body
         JPanel pnlBody = new JPanel();
         pnlBody.setLayout(new GridLayout(1, 0));
         //add component to panel body
-        String[] columnname = {"ImportID","Name", "Content", "Quantity", "Price", "Supplier","Import Date","Expiration Date"};
-        String query = "select importid,productname , productcontent, depot.quantity, depot.price, suppliername,importdate,expirationdate\n" +
-                "from depot join product on  depot.productid = product.productid\n" +
-                "join supplier on product.supplierid = supplier.supplierid";
+        String[] columnname = {"Name", "Age", "Phone", "Email", "Address","City"};
+        String query ="select customername, customerage, customerphone, customeremail, customeraddress, cityname\n" +
+                "from customer join city on customer.cityid=city.cityid\n";
+
         d = new Dimension(115, 20);
-        tp = new TableDepot();
-        JScrollPane sp = tp.table("depot", columnname, query, d, true);
+        tp = new TableCustomer();
+        JScrollPane sp = tp.table("customer", columnname, query, d, true);
         //tao su kien search
         btnSearch.addActionListener(e -> {
             DBConnection db = new DBConnection();
@@ -71,7 +85,7 @@ public class DepotForm extends JDialog {
             int position = 0;
             int index = boxSearch.getSelectedIndex();// lay vi tri index trong boxSearch
             String strSearch = tfSearch.getText(); // lay text trong text field
-            row = db.getRowCount("depot"); // lay so hang
+            row = db.getRowCount("customer"); // lay so hang
             int column = 0;
             if (index == 0 ) // tuong duong voi All trong boxSearch
             {
@@ -104,31 +118,16 @@ public class DepotForm extends JDialog {
         pnlHead.add(btnSearch);
         pnlBody.add(sp);
 
-        JButton btnImport = new JButton("Import");
-        btnImport.setBounds(500,40,80,25);
-        btnImport.addActionListener(e -> {
-            ImportForm im = new ImportForm();
-
-        });
-        pnlHead.add(btnImport);
-        JButton btnExport = new JButton("Export");
-        btnExport.setBounds(600,40,80,25);
-        btnExport.addActionListener(e -> {
-            ExportForm ex = new ExportForm();
-        });
-        pnlHead.add(btnExport);
 
         //add 2 panel to box
         pnlBody.setPreferredSize(new Dimension(1300, 400));
         pnlHead.setPreferredSize(new Dimension(1300, 200));
         boxes[0].add(pnlHead);
         boxes[1].add(pnlBody);
-
-
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        DepotForm depotForm=new DepotForm();
+        MainCustomer mainCustomer=new MainCustomer();
     }
 }
