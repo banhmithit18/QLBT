@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 public class InventoryForm extends JDialog {
     int row;
     public static Dimension d;
-    public static TableDepot tp;
+    public static TableInventory tp;
     public InventoryForm(String storeId) {
         //setting form
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -22,7 +22,7 @@ public class InventoryForm extends JDialog {
         setResizable(false);
         setUIFont f = new setUIFont();
         f.Font(new FontUIResource("Arial", Font.PLAIN, 12));
-        setTitle("Depot");
+        setTitle("Inventory");
         //add root panel
         JPanel rootPnl = (JPanel) getContentPane();
         rootPnl.setLayout(new BoxLayout(rootPnl, BoxLayout.Y_AXIS));
@@ -64,7 +64,7 @@ public class InventoryForm extends JDialog {
                 "from inventory join product on  inventory.productid = product.productid\n" +
                 "join supplier on product.supplierid = supplier.supplierid where storeid ="+storeId;
         d = new Dimension(115, 20);
-        tp = new TableDepot();
+        tp = new TableInventory();
         JScrollPane sp = tp.table("inventory", columnname, query, d, true);
         //tao su kien search
         tfSearch.addKeyListener(new KeyAdapter() {
