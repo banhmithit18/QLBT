@@ -6,6 +6,9 @@ import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Pay extends JDialog  {
@@ -17,20 +20,37 @@ public class Pay extends JDialog  {
         setResizable(false);
         setTitle("Pay");
         setUIFont.Font(new FontUIResource("Arial",Font.PLAIN, 12));
-        setBounds(600, 90, 382, 485);
+        setBounds(100, 100, 382, 485);
         setLayout(null);
+
+        JLabel lblcheckbill = new JLabel("Check Bill");
+        lblcheckbill.setFont(new Font("Georgia", Font.BOLD, 30));
+        lblcheckbill.setBounds(104, 20, 163, 42);
+        add(lblcheckbill);
 
         area = new JTextArea();
         area.setText("");
         area.setFont(new Font("Tahoma", Font.BOLD, 6));
-        area.setBounds(41, 32, 287, 293);
+        area.setBounds(41, 72, 287, 293);
         add(area);
         area.setEnabled(false);
 
         BT_receipt = new JButton("Receipt");
-        BT_receipt.setBounds(41, 361, 95, 30);
+        BT_receipt.setBounds(41, 386, 95, 30);
         add(BT_receipt);
         BT_receipt.addActionListener(e -> {
+            try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            }
+            String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
+            try {
+                Connection conn = DriverManager.getConnection(connectionUrl);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
             String total =SellForm2.lblTotal_Money.getText();
             String pay=SellForm2.tfCusPey.getText();
             String balance=SellForm2.lblExcessCase_Money.getText();
@@ -56,19 +76,19 @@ public class Pay extends JDialog  {
                 String productname=(String)model.getValueAt(i, 1);
                 String quantity=(String)model.getValueAt(i, 2);
                 String productprice=(String)model.getValueAt(i, 3);
-                String expriratiolndate=(String)model.getValueAt(i, 4);
                 String productAmount=(String)model.getValueAt(i, 5);
 
-                area.setText(area.getText() + "productname: " + productname + "\n" +  quantity + "\t" + productprice + "\t" + productAmount + "\n\n");
+
+                area.setText(area.getText() + "productname: " + productname +" "+"vnd"+ "\n" +  quantity + "\t" + productprice +" "+"vnd"+ "\t" + productAmount +" "+"vnd"+ "\n\n");
                 area.setText(area.getText() + "--------------------------------------------------------------\n");
 
             }
 
 //            area.setText(area.getText()+ "_____________________________________________\n");
             area.setText(area.getText()+"\n");
-            area.setText(area.getText()  + "Total : " + total + "\n\n");
-            area.setText(area.getText()  + "Pay : " +pay+"\n\n");
-            area.setText(area.getText()  + "Balance : " +balance+ "\n\n");
+            area.setText(area.getText()  + "Total : " + total +" "+"vnd"+ "\n\n");
+            area.setText(area.getText()  + "Pay : " +pay+" "+"vnd"+"\n\n");
+            area.setText(area.getText()  + "Balance : " +balance+" "+"vnd"+ "\n\n");
             area.setText(area.getText()+"\n");
             area.setText(area.getText()+ "*****************************************************************\n");
             area.setText(area.getText()+ "                  THANK YOU SO MUCH !                             \n");
@@ -82,7 +102,7 @@ public class Pay extends JDialog  {
         });
 
         JButton BT_print = new JButton("Print");
-        BT_print.setBounds(233, 361, 95, 30);
+        BT_print.setBounds(233, 386, 95, 30);
         add(BT_print);
         BT_print.addActionListener(e -> {
             try{
