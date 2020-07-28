@@ -134,11 +134,13 @@ public class LoginForm extends JFrame {
             DBConnection db = new DBConnection();
             if (db.check("Select username from employee where username ='"+username+"'")) {
                 if (db.check("Select password from employee where username ='"+username+"' and password ='"+password+"'")) {
+
                     userName = username;
-                    UserId = tftUsername.getText();
-                    tftUsername.setText(null);
-                    tpPass.setText(null);
-                    tpPass.setEchoChar(originalEchoChar);
+                    UserId = tfUser.getText();
+                    tfUser.setText(null);
+                    pfPass.setText(null);
+                    pfPass.setEchoChar(originalEchoChar);
+                    SellForm2 sellForm2=new SellForm2();
                     setVisible(false);
 
                 } else {
@@ -150,6 +152,10 @@ public class LoginForm extends JFrame {
                 lblWarn.setForeground(Color.red);
             }
         }
+
+    public static void main(String[] args) {
+        LoginForm loginForm=new LoginForm();
+    }
 
     }
 

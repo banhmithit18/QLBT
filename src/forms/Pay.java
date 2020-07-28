@@ -22,6 +22,7 @@ public class Pay extends JDialog  {
 
         area = new JTextArea();
         area.setText("");
+        area.setFont(new Font("Tahoma", Font.BOLD, 6));
         area.setBounds(41, 32, 287, 293);
         add(area);
         area.setEnabled(false);
@@ -39,37 +40,44 @@ public class Pay extends JDialog  {
             DefaultTableModel model = new DefaultTableModel();
             model =(DefaultTableModel)SellForm2.table.getModel();
             area.setText(area.getText()+ "*****************************************************************\n");
-            area.setText(area.getText()+ "                         APTECH DRUGSTORE                             \n");
-            area.setText(area.getText()+ "            212-214_NguyenDinhChieu_Q.3_HCM                             \n");
-            area.setText(area.getText()+ "                         Hotaline:0123.456.789                             \n");
+            area.setText(area.getText()+ "                     APTECH DRUGSTORE                             \n");
+            area.setText(area.getText()+ "        212-214_NguyenDinhChieu_Q.3_HCM                             \n");
+            area.setText(area.getText()+ "                     Hotaline:0123.456.789                             \n");
             area.setText(area.getText()+ "*****************************************************************\n") ;
-            area.setText(area.getText()+ "                            Today : " + date + "\n\n") ;
+            area.setText(area.getText()+ "             Date : " + date + "\n\n") ;
             area.setText(area.getText()+ "Employee : " + employee + "\n\n") ;
 
 
-            //heading
-            area.setText(area.getText() + "productname" + "\t" + "quantity" + "\t" + "price" + "\t" + "expirationdate" + "\t" + "amount" + "\n\n");
+           //heading
+            area.setText(area.getText() + "quantity" + "\t" + "price" + "\t" + "amount" + "\n");
+            area.setText(area.getText() + "--------------------------------------------------------------\n");
 
             for(int i=0; i < model.getRowCount(); i++) {
                 String productname=(String)model.getValueAt(i, 1);
-                String qantity=(String)model.getValueAt(i, 2);
+                String quantity=(String)model.getValueAt(i, 2);
                 String productprice=(String)model.getValueAt(i, 3);
-                String expirationdate=(String)model.getValueAt(i, 4);
+                String expriratiolndate=(String)model.getValueAt(i, 4);
                 String productAmount=(String)model.getValueAt(i, 5);
 
-                area.setText(area.getText() + productname + "\t" +  qantity + "\t" + productprice + "\t" + expirationdate + "\t" + productAmount + "\n\n");
+                area.setText(area.getText() + "productname: " + productname + "\n" +  quantity + "\t" + productprice + "\t" + productAmount + "\n\n");
+                area.setText(area.getText()+ "Expriratiolndate: "  + expriratiolndate + "\n\n");
+                area.setText(area.getText() + "--------------------------------------------------------------\n");
 
             }
 
-            area.setText(area.getText()+ "_____________________________________________\n");
+//            area.setText(area.getText()+ "_____________________________________________\n");
             area.setText(area.getText()+"\n");
             area.setText(area.getText()  + "Total : " + total + "\n\n");
             area.setText(area.getText()  + "Pay : " +pay+"\n\n");
             area.setText(area.getText()  + "Balance : " +balance+ "\n\n");
             area.setText(area.getText()+"\n");
             area.setText(area.getText()+ "*****************************************************************\n");
-            area.setText(area.getText()+ "                        THANKS YOU SO MUCH !                             \n");
-            area.setText(area.getText()+ "*****************************************************************\n") ;
+            area.setText(area.getText()+ "                  THANK +++YOU SO MUCH !                             \n");
+            area.setText(area.getText()+ "*****************************************************************\n\n\n") ;
+            area.setText(area.getText()+"\n");
+            area.setText(area.getText()+"\n");
+            area.setText(area.getText()+"\n");
+
 
 
         });

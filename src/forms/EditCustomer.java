@@ -119,44 +119,44 @@ public class EditCustomer extends JDialog {
                 Connection conn = DriverManager.getConnection(connectionUrl);
                 String sql = "update customer set customerage = '"+agecustomer+"' , customerphone ='"+phonecustomer+"' , customeremail ='"+emailcustomer+"' , customeraddress = '"+addresscustomer+"' , cityid = '"+cbcity+"'where customername ='"+namecustomer+"'";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                if (!phonecustomer.equals("")) {
-                    if (!emailcustomer.equals("")) {
-                        if (!addresscustomer.equals("")) {
-                            if (CheckPhone(phonecustomer)){
-                                preparedStatement.executeUpdate();
-                                JOptionPane.showMessageDialog(rootPane, "Update Success");
-                                int row = MainCustomer.tp.row;
-                                int column = 0 ;
-                                for ( int i = 0 ; i<row ;i++)
-                                {
-                                    if(MainCustomer.tp.labels.get(0+column).getText().equals(name_ct))
+                    if (!phonecustomer.equals("")) {
+                        if (!emailcustomer.equals("")) {
+                            if (!addresscustomer.equals("")) {
+                                if (CheckPhone(phonecustomer)){
+                                    preparedStatement.executeUpdate();
+                                    JOptionPane.showMessageDialog(rootPane, "Update Success");
+                                    int row = MainCustomer.tp.row;
+                                    int column = 0 ;
+                                    for ( int i = 0 ; i<row ;i++)
                                     {
-                                        MainCustomer.tp.labels.get(1+column).setText(textField_age.getText());
-                                        MainCustomer.tp.labels.get(2+column).setText(textField_phone.getText());
-                                        MainCustomer.tp.labels.get(3+column).setText(textField_email.getText());
-                                        MainCustomer.tp.labels.get(4+column).setText(textField_address.getText());
-                                        MainCustomer.tp.labels.get(5+column).setText(boxCity.getSelectedItem().toString());
+                                        if(MainCustomer.tp.labels.get(0+column).getText().equals(name_ct))
+                                        {
+                                            MainCustomer.tp.labels.get(1+column).setText(textField_age.getText());
+                                            MainCustomer.tp.labels.get(2+column).setText(textField_phone.getText());
+                                            MainCustomer.tp.labels.get(3+column).setText(textField_email.getText());
+                                            MainCustomer.tp.labels.get(4+column).setText(textField_address.getText());
+                                            MainCustomer.tp.labels.get(5+column).setText(boxCity.getSelectedItem().toString());
+                                        }
+                                        column += MainCustomer.tp.column;
                                     }
-                                    column += MainCustomer.tp.column;
+                                    textField_name.setText("");
+                                    textField_age.setText("");
+                                    textField_phone.setText("");
+                                    textField_email.setText("");
+                                    textField_address.setText("");
+                                    boxCity.setSelectedItem("");
+                                }else {
+                                    JOptionPane.showMessageDialog(rootPane,"Phone was available");
                                 }
-                                textField_name.setText("");
-                                textField_age.setText("");
-                                textField_phone.setText("");
-                                textField_email.setText("");
-                                textField_address.setText("");
-                                boxCity.setSelectedItem("");
-                            }else {
-                                JOptionPane.showMessageDialog(rootPane,"Phone was available");
+                            } else {
+                                JOptionPane.showMessageDialog(rootPane, "Please enter your address customer");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(rootPane, "Please enter your address customer");
+                            JOptionPane.showMessageDialog(rootPane, "Please enter your email customer");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Please enter your email customer");
+                        JOptionPane.showMessageDialog(rootPane, "Please enter your phone customer");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Please enter your phone customer");
-                }
             } catch (ClassNotFoundException classNotFoundException) {
                 classNotFoundException.printStackTrace();
             } catch (SQLException throwables) {
