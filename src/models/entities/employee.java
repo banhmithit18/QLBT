@@ -1,12 +1,12 @@
 package models.entities;
 
 public class employee {
-        public String employeename, employeephone, emplouyeeemail, employeeaddress,username,password;
+        public String employeename, employeephone, employeeemail, employeeaddress,username,password;
 
-    public employee(String employeename, String employeephone, String emplouyeeemail, String employeeaddress, String username, String password) {
+    public employee(String employeename, String employeephone, String employeeemail, String employeeaddress, String username, String password) {
         this.employeename = employeename;
         this.employeephone = employeephone;
-        this.emplouyeeemail = emplouyeeemail;
+        this.employeeemail = employeeemail;
         this.employeeaddress = employeeaddress;
         this.username = username;
         this.password = password;
@@ -14,7 +14,7 @@ public class employee {
     public employee(){
         employeename = "";
         employeephone = "";
-        emplouyeeemail = "";
+        employeeemail = "";
         employeeaddress = "";
         username = "";
         password = "";
@@ -38,11 +38,11 @@ public class employee {
     }
 
     public String getEmplouyeeemail() {
-        return emplouyeeemail;
+        return employeeemail;
     }
 
     public void setEmplouyeeemail(String emplouyeeemail) {
-        this.emplouyeeemail = emplouyeeemail;
+        this.employeeemail = emplouyeeemail;
     }
 
     public String getEmployeeaddress() {
