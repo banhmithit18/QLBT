@@ -6,8 +6,10 @@ import utils.setUIFont;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.SliderUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -18,12 +20,15 @@ public class LoginForm extends JFrame {
         JPasswordField tpPass;
         JLabel lblWarn;
         char originalEchoChar;
+
         public String UserId;
         static String userName;
 
         public LoginForm() {
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            setBounds(100, 100, 484, 557);
+            setResizable(false);
+            setBounds(0, 0, 484, 557);
+            setLocationRelativeTo(null);
             contentPane = new JPanel();
             contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
             setContentPane(contentPane);
@@ -82,36 +87,13 @@ public class LoginForm extends JFrame {
             btnLogin.setBounds(0, 0, 168, 30);
             pnlLogin.add(btnLogin);
 
-//            JLabel lblForgotPass = new JLabel("Do not have an account ?");
-//            lblForgotPass.setFont(new Font("Tahoma", Font.BOLD, 10));
-//            lblForgotPass.setForeground(Color.RED);
-//            lblForgotPass.setBounds(178, 486, 190, 13);
-//            contentPane.add(lblForgotPass);
-//            lblForgotPass.addMouseListener(new MouseAdapter() {
-//                @Override
-//                public void mouseClicked(MouseEvent e) {
-//                    super.mouseClicked(e);
-//                }
-//
-//                @Override
-//                public void mouseEntered(MouseEvent e) {
-//                    super.mouseEntered(e);
-//                    lblForgotPass.setForeground(Color.BLACK);
-//                }
-//
-//                @Override
-//                public void mouseExited(MouseEvent e) {
-//                    super.mouseExited(e);
-//                    lblForgotPass.setForeground(Color.RED);
-//                }
-//            });
+
 
             lblWarn = new JLabel("");
             lblWarn.setBounds(176, 400, 168, 13);
             contentPane.add(lblWarn);
             btnLogin.addActionListener(this::actionLogin);
             btnLogin.addMouseListener(new MouseAdapter() {
-
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     super.mouseEntered(e);
@@ -139,6 +121,7 @@ public class LoginForm extends JFrame {
                     tftUsername.setText(null);
                     tpPass.setText(null);
                     tpPass.setEchoChar(originalEchoChar);
+                    MainForm mf=new MainForm();
                     setVisible(false);
 
                 } else {

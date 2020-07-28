@@ -64,7 +64,7 @@ public class SellForm2 extends JFrame {
         Contentpane.add(pnlPey);
         pnlPey.setLayout(null);
 
-        JLabel lblCusName = new JLabel("Customer Name:");
+        JLabel lblCusName = new JLabel("Customer Phone:");
         lblCusName.setBounds(10, 49, 96, 23);
         pnlPey.add(lblCusName);
 
@@ -86,7 +86,7 @@ public class SellForm2 extends JFrame {
         pnlPey.add(tftCusPhone);
         tftCusPhone.setColumns(10);
 
-        JLabel lbl_Title_CusName = new JLabel("Customer Phone:");
+        JLabel lbl_Title_CusName = new JLabel("Customer Name:");
         lbl_Title_CusName.setBounds(10, 99, 114, 13);
         pnlPey.add(lbl_Title_CusName);
 
