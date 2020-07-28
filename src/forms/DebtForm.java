@@ -49,10 +49,44 @@ public class DebtForm extends JDialog {
         tfSearch.setBounds(10, 40, 200, 25);
         pnlHead.add(tfSearch);
 
-        String[] boxColumn = {"All","Supplier","Payment Date","Status"};
+        String[] boxColumn = {"All","Index","Supplier","Value","Payment Date","Status"};
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
+
+        JButton btnChk = new JButton("Check payment date");
+        btnChk.setBounds(380,40,180,25);
+        pnlHead.add(btnChk);
+
+        btnChk.addActionListener(e -> {
+            String nearPaymentDate = "";
+            long currentDay = System.currentTimeMillis();
+            long dayInMil = 604800000 ;
+            DBConnection db = new DBConnection();
+            for ( int i = 0 ;i<db.getRowCount("debt");i++)
+            {
+                String expDayInString  = ((JLabel)td.pnlData.get(i).getComponent(3)).getText();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = sdf.parse(expDayInString);
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                long result = date.getTime()-currentDay;
+
+                if(  result <= dayInMil)
+                {
+                    String index = ((JLabel)td.pnlData.get(i).getComponent(0)).getText();
+                    String Date = ((JLabel)td.pnlData.get(i).getComponent(3)).getText();
+                    if(!((JLabel)td.pnlData.get(i).getComponent(4)).getText().equals("Đã thanh toán"))
+                    nearPaymentDate = nearPaymentDate +"Index: "+index +" - Payment Period: "+Date+"\n";
+                }
+
+            }
+
+            ExpForm epx = new ExpForm(nearPaymentDate,"Payment Period");
+        });
 
 
 //        JButton btnSearch = new JButton("Search");
@@ -61,9 +95,9 @@ public class DebtForm extends JDialog {
         JPanel pnlBody = new JPanel();
         pnlBody.setLayout(new GridLayout(1, 0));
         //add component to panel body
-        String[] columnname = {"Supplier","Value","Payment Period","Status"};
-        String query = "select supplierid,value,paymentperiod,status from debt";
-        d = new Dimension(160, 20);
+        String[] columnname = {"","Supplier","Value","Payment Period","Status"};
+        String query = "select * from debt";
+        d = new Dimension(140, 20);
         td = new TableDebt();
         JScrollPane sp = td.table("debt", columnname, query, d, true);
         //tao su kien search

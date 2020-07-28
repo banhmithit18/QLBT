@@ -10,9 +10,10 @@ public class TableDebt extends  TableForm {
         {
             if(this.btnEdit.get(i).equals(e.getSource()))
             {
-                int supplier = Integer.parseInt(((JLabel)pnlData.get(i).getComponent(0)).getText());
-                float value = Float.parseFloat(((JLabel)pnlData.get(i).getComponent(1)).getText());
-                PayForm p = new PayForm(supplier,value);
+                int debtid = Integer.parseInt(((JLabel)pnlData.get(i).getComponent(0)).getText());
+                int supplier = Integer.parseInt(((JLabel)pnlData.get(i).getComponent(1)).getText());
+                float value = Float.parseFloat(((JLabel)pnlData.get(i).getComponent(2)).getText());
+                PayForm p = new PayForm(debtid,supplier,value);
             }
         }
     }

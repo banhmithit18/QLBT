@@ -192,6 +192,26 @@ public class DBConnection<T> {
         }
         return false;
     }
+    public boolean updateDebt(float ammout, int debtid){
+        try(Connection con = DriverManager.getConnection(urlConnection))
+        {
+            String query = "update debt set value ="+ammout+" where debt ="+debtid;
+            Statement stmt = con.createStatement();
+            int check = stmt.executeUpdate(query);
+            if(check != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean Create(T item) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {

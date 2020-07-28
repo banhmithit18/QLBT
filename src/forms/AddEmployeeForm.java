@@ -7,6 +7,8 @@ import utils.setUIFont;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class AddEmployeeForm extends JDialog {
     JTextField tfUsername,tfName,tfPhone,tfEmail,tfAddress;
@@ -69,9 +71,23 @@ public class AddEmployeeForm extends JDialog {
         tfAddress = new JTextField();
         tfAddress.setBounds(120,230,200,25);
         add(tfAddress);
+        JLabel lblStoreid = new JLabel("Store");
+        lblStoreid.setBounds(30,270,120,25);
+        add(lblStoreid);
+        DBConnection db = new DBConnection();
+        String[] strStore = db.getComboboxString("Select storeid from store").split(",");
+        JComboBox comboBox = new JComboBox(strStore);
+        ComboboxToolTipRender render = new ComboboxToolTipRender();
+        comboBox.setRenderer(render);
+        String [] storeToolTipArr = db.getStoreAddress().split(",");
+        List<String> storeTooltip = Arrays.asList(storeToolTipArr);
+        render.setTooltips(storeTooltip);
+        ComboboxDecorator.decorate(comboBox,true);
+        comboBox.setBounds(120, 270, 200, 25);
+        add(comboBox);
         JButton btnAdd = new JButton("Register");
         btnAdd.setForeground(Color.white);
-        btnAdd.setBounds(150,275,100,25);
+        btnAdd.setBounds(150,315,100,25);
         btnAdd.setOpaque(true);
         btnAdd.setBackground(new Color(0,124,253));
         btnAdd.addActionListener(e -> {
@@ -81,16 +97,16 @@ public class AddEmployeeForm extends JDialog {
             String email = tfEmail.getText();
             String address = tfAddress.getText();
             String password =pfPassword.getText();
+            int store = Integer.parseInt(comboBox.getSelectedItem().toString());
             if(userName.isEmpty()||fullName.isEmpty()||phone.isEmpty()||email.isEmpty()||address.isEmpty()||password.isEmpty())
             {
                 JOptionPane.showMessageDialog(rootPane,"Please enter all required information");
             }
             else
             {
-                DBConnection db = new DBConnection();
                 if(!db.check("Select username from employee where username ='"+userName+"'"))
                 {
-                    employee emp = new employee(fullName,phone,email,address,userName,password);
+                    employee emp = new employee(fullName,phone,email,address,userName,password,store);
                     if(db.Create(emp))
                     {
                         JOptionPane.showMessageDialog(rootPane,"Successfully registered");

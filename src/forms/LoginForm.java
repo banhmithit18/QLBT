@@ -118,8 +118,7 @@ public class LoginForm extends JFrame {
                 if (db.check("Select password from employee where username ='"+username+"' and password ='"+password+"'")) {
 
                     userName = username;
-                    UserId = tfUser.getText();
-                    tfUser.setText(null);
+                    tftUsername.setText(null);
                     tpPass.setText(null);
                     tpPass.setEchoChar(originalEchoChar);
                     MainForm mf=new MainForm();

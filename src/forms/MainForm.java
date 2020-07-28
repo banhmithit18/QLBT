@@ -107,7 +107,7 @@ public class  MainForm extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 pnlContent.removeAll();
-                pnlContent.add(new EmployeeForm());
+                pnlContent.add(new AddEmployeeForm());
                 pnlContent.setLayout(null);
                 pnlContent.validate();
                 pnlContent.repaint();

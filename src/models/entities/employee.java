@@ -2,14 +2,17 @@ package models.entities;
 
 public class employee {
         public String employeename, employeephone, employeeemail, employeeaddress,username,password;
+        public int storeid,checkacc;
 
-    public employee(String employeename, String employeephone, String employeeemail, String employeeaddress, String username, String password) {
+    public employee(String employeename, String employeephone, String employeeemail, String employeeaddress, String username, String password,int storeid) {
         this.employeename = employeename;
         this.employeephone = employeephone;
         this.employeeemail = employeeemail;
         this.employeeaddress = employeeaddress;
         this.username = username;
         this.password = password;
+        this.storeid = storeid;
+        checkacc = 0;
     }
     public employee(){
         employeename = "";
@@ -18,6 +21,8 @@ public class employee {
         employeeaddress = "";
         username = "";
         password = "";
+        storeid = 0;
+        checkacc = 0;
 
     }
 
@@ -36,15 +41,6 @@ public class employee {
     public void setEmployeephone(String employeephone) {
         this.employeephone = employeephone;
     }
-
-    public String getEmplouyeeemail() {
-        return employeeemail;
-    }
-
-    public void setEmplouyeeemail(String emplouyeeemail) {
-        this.employeeemail = emplouyeeemail;
-    }
-
     public String getEmployeeaddress() {
         return employeeaddress;
     }
@@ -67,5 +63,29 @@ public class employee {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmployeeemail() {
+        return employeeemail;
+    }
+
+    public void setEmployeeemail(String employeeemail) {
+        this.employeeemail = employeeemail;
+    }
+
+    public int getStoreid() {
+        return storeid;
+    }
+
+    public void setStoreid(int storeid) {
+        this.storeid = storeid;
+    }
+
+    public int getCheckacc() {
+        return checkacc;
+    }
+
+    public void setCheckacc(int checkacc) {
+        this.checkacc = checkacc;
     }
 }
