@@ -281,7 +281,7 @@ public class  MainForm extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                SellForm sf=new SellForm();
+                SellForm2 sf=new SellForm2();
             }
 
             @Override
@@ -311,5 +311,9 @@ public class  MainForm extends JFrame {
         pnlContent.setLayout(null);
 
         setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        MainForm mainForm=new MainForm();
     }
 }

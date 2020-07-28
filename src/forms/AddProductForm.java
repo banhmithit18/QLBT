@@ -87,4 +87,8 @@ public class AddProductForm extends JDialog {
         add(btnAdd);
         setVisible(true);
     }
+
+    public static void main(String[] args) {
+        AddProductForm addProductForm=new AddProductForm();
+    }
 }

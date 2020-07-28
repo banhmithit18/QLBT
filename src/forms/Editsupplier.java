@@ -111,11 +111,12 @@ public class Editsupplier extends JDialog {
                     if (!phonesupplier.equals("")) {
                         if (!emailsupplier.equals("")) {
                             if (!addresssupplier.equals("")) {
-                                        preparedStatement.executeUpdate();
-                                        JOptionPane.showMessageDialog(rootPane, "Update Success");
+                                if (CheckPhonesp(phonesupplier)){
+                                    preparedStatement.executeUpdate();
+                                    JOptionPane.showMessageDialog(rootPane, "Update Success");
 
-                                        int row = MainSupplier.ts.row;
-                                        int column = 0 ;
+                                    int row = MainSupplier.ts.row;
+                                    int column = 0 ;
                                     for ( int i = 0 ; i<row ;i++)
                                     {
                                         if(MainSupplier.ts.labels.get(0+column).getText().equals(name))
@@ -127,11 +128,15 @@ public class Editsupplier extends JDialog {
                                         }
                                         column += MainSupplier.ts.column;
                                     }
-                                textField_namesp.setText("");
-                                textField_phonesp.setText("");
-                                textField_emailsp.setText("");
-                                textField_addresssp.setText("");
-                                textField_deptsp.setText("");
+                                    textField_namesp.setText("");
+                                    textField_phonesp.setText("");
+                                    textField_emailsp.setText("");
+                                    textField_addresssp.setText("");
+                                    textField_deptsp.setText("");
+                                }else {
+                                    JOptionPane.showMessageDialog(rootPane,"Phone was available ");
+                                }
+
                             } else {
                                 JOptionPane.showMessageDialog(rootPane, "Please enter your address supplier");
                             }
@@ -185,5 +190,6 @@ public class Editsupplier extends JDialog {
         }
         return false;
     }
+
 
 }

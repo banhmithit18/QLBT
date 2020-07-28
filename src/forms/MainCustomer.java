@@ -63,7 +63,7 @@ public class MainCustomer extends JDialog {
         JButton btnADD = new JButton("Add");
         btnADD.setBounds(600,80,80,25);
         btnADD.addActionListener(e -> {
-
+            Addcustomer addcustomer=new Addcustomer();
         });
         pnlHead.add(btnADD);
 
