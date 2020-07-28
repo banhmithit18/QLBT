@@ -7,12 +7,11 @@ import utils.setUIFont;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class DepotForm extends JPanel {
+public class DepotForm extends JDialog {
     int row;
     public static Dimension d;
     public static TableDepot tp;
@@ -22,7 +21,8 @@ public class DepotForm extends JPanel {
         setUIFont f = new setUIFont();
         f.Font(new FontUIResource("Arial", Font.PLAIN, 12));
         //add root panel
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        JPanel contentPane = (JPanel) getContentPane();
+        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         //create box
         Box[] boxes = new Box[2];
         boxes[0] = Box.createHorizontalBox();
@@ -31,8 +31,8 @@ public class DepotForm extends JPanel {
         boxes[0].createGlue();
         boxes[1].createGlue();
 
-        this.add(boxes[0]);
-        this.add(boxes[1]);
+        contentPane.add(boxes[0]);
+        contentPane.add(boxes[1]);
 
         //add JPanel head
         JPanel pnlHead = new JPanel();
@@ -46,16 +46,16 @@ public class DepotForm extends JPanel {
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
-        boxSearch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(boxSearch.getSelectedIndex() == 0){
-                    tfSearch.setEditable(false);
-                }else {
-                    tfSearch.setEditable(true);
-                }
-            }
-        });
+//        boxSearch.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                if(boxSearch.getSelectedIndex() == 0){
+//                    tfSearch.setEditable(false);
+//                }else {
+//                    tfSearch.setEditable(true);
+//                }
+//            }
+//        });
 
 //        JButton btnSearch = new JButton("Search");
 //        btnSearch.setBounds(120, 80, 120, 25);

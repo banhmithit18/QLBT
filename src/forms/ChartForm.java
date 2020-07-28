@@ -3,6 +3,10 @@ package forms;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.category.DefaultCategoryDataset;
 import utils.DBConnection;
 import utils.setUIFont;
@@ -140,18 +144,27 @@ public class ChartForm extends JFrame {
 
 
             ArrayList<Float> data = db.callProd(month, year, date,storeid,sort);
+            // day la ham de lay dc du lieu
             DefaultCategoryDataset dataset = createDataset(sort, data);
             // Create chart
             JFreeChart chart = ChartFactory.createLineChart(
-                    "Sale Volume", // Chart title
-                    "", // X-Axis Label
-                    "", // Y-Axis Label
-                    dataset
+
+                    "Sale Volume", // Chart title - tieu de bieu do
+                    "", // X-Axis Label - ten cot doc
+                    "", // Y-Axis Label - ten cot ngang
+                    dataset // data tao tu phia tren
+
             );
-            pnlBody.setLayout(new FlowLayout());
-            ChartPanel panel = new ChartPanel(chart);
-            panel.setPreferredSize(new Dimension(970, 400));
-            pnlBody.add(panel);
+            CategoryPlot plot = chart.getCategoryPlot();
+            ValueAxis rangeAxis = plot.getRangeAxis();
+            rangeAxis.setAutoRangeMinimumSize(1);
+            rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+
+
+            pnlBody.setLayout(new FlowLayout());// setlayout cho panel chinh chua bieu do
+            ChartPanel panel = new ChartPanel(chart); // tao ra 1 chartpanel de chua bieu do
+            panel.setPreferredSize(new Dimension(970, 400)); // set size cho bieu do
+            pnlBody.add(panel); // ađ bieu do vao panel chinh
             pnlBody.repaint();
             pnlBody.revalidate();
         });
@@ -163,7 +176,6 @@ public class ChartForm extends JFrame {
     private DefaultCategoryDataset createDataset(String type, ArrayList<Float> data) {
 
         String series1 = "Money";
-
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         if (type.equals("Month")) {
             for (int i = 0; i < 12; i++) {
@@ -171,19 +183,21 @@ public class ChartForm extends JFrame {
                 dataset.addValue(data.get(i), series1, "" + key);
             }
         } else if (type.equals("Day")) {
-            int date = getDateOf.Month(month); //test
+            int date = getDateOf.Month(month);
             for (int i = 0; i < date; i++) {
                 int key = i + 1;
                 dataset.addValue(data.get(i), series1, "" + key);
+                /// data la du lieu 1 ngay
+                // series1 o day la ten dong bieu do
+                // columnKey la gia tri nam ngang ,vd o day la tu 1 - 31 ( tuong duong 1 thang)
             }
         } else if (type.equals("Year")) {
             for (int i = 0; i < 8; i++) {
                 int key = i + 1;
                 dataset.addValue(data.get(i), series1, "" + key);
+
             }
         }
-
-
         return dataset;
     }
 

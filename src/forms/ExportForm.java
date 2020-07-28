@@ -6,7 +6,6 @@ import utils.DBConnection;
 import utils.setUIFont;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -188,6 +187,7 @@ public class ExportForm extends JDialog {
                                               DepotForm.tp.getPnlAllData().revalidate();
                                           }
                                       }
+
                                       /// su kien kiem tra
                                       String productName = db.getName("Select productname from product where productid ='"+productId+"'");
                                       // column + 1 = ten product tren table

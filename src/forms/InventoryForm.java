@@ -9,6 +9,8 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class InventoryForm extends JDialog {
     int row;
@@ -51,6 +53,16 @@ public class InventoryForm extends JDialog {
         JComboBox boxSearch = new JComboBox(boxColumn);
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
+
+        JButton btnChkExp = new JButton("Check Expiration");
+        btnChkExp.setFont(new Font("Arial",Font.PLAIN,10));
+        btnChkExp.setBounds(10,90,120,25);
+        pnlHead.add(btnChkExp);
+        btnChkExp.addActionListener(e -> {
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+
+            System.out.println(timeStamp);
+        });
 
 //        JButton btnSearch = new JButton("Search");
 //        btnSearch.setBounds(120, 80, 120, 25);
