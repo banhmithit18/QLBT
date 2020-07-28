@@ -40,7 +40,7 @@ public class DBConnection<T> {
             String strReturn = "";
             while (rs.next()) {
                 strReturn += "<html> Name: " + rs.getString("productname") + "<br>" + " Content :" + rs.getString("productcontent") + "</html>";
-                strReturn += ",";
+                strReturn += "!";
             }
             strReturn = strReturn.substring(0, strReturn.length() - 1);
             return strReturn;
@@ -253,45 +253,7 @@ public class DBConnection<T> {
         }
         return null;
     }
-    public String getAllName(String tableName) {
-        try (Connection con = DriverManager.getConnection(urlConnection)) {
-            Statement stmt = con.createStatement();
-            String columnName = tableName + "name";
-            String query = "SELECT DISTINCT " + columnName + " FROM " + tableName;
-            ResultSet rs = stmt.executeQuery(query);
-            String allName = "";
-            while (rs.next()) {
-                allName += rs.getString(columnName) + ",";
-            }
-            allName = allName.substring(0, allName.length() - 1); //loai bo dau phay cuoi
-            return allName;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 
-    public int getColumnID(String tableName, String columnValue) {
-        try (Connection con = DriverManager.getConnection(urlConnection)) {
-            Statement stmt = con.createStatement();
-            String columnID = tableName + "id";
-            String columnName = tableName + "name";
-            String query ="";
-            if (!tableName.equals("relative")) {
-                query = "SELECT " + columnID + " FROM " + tableName + " WHERE " + columnName + " = N'" + columnValue + "'";
-            }
-            else{
-                query ="SELECT " +columnID +" FROM " + tableName + " WHERE " + tableName+"idcard ='" +columnValue+"'";
-            }
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
     public ArrayList<Float> callProd(int month, int year, int date, String storeid,String type) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {
             ArrayList<Float> data = new ArrayList<>();
@@ -352,4 +314,46 @@ public class DBConnection<T> {
         }
         return null;
     }
+
+    public String getAllName(String tableName) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            Statement stmt = con.createStatement();
+            String columnName = tableName + "name";
+            String query = "SELECT DISTINCT " + columnName + " FROM " + tableName;
+            ResultSet rs = stmt.executeQuery(query);
+            String allName = "";
+            while (rs.next()) {
+                allName += rs.getString(columnName) + ",";
+            }
+            allName = allName.substring(0, allName.length() - 1); //loai bo dau phay cuoi
+            return allName;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public int getColumnID(String tableName, String columnValue) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            Statement stmt = con.createStatement();
+            String columnID = tableName + "id";
+            String columnName = tableName + "name";
+            String query ="";
+            if (!tableName.equals("relative")) {
+                query = "SELECT " + columnID + " FROM " + tableName + " WHERE " + columnName + " = N'" + columnValue + "'";
+            }
+            else{
+                query ="SELECT " +columnID +" FROM " + tableName + " WHERE " + tableName+"idcard ='" +columnValue+"'";
+            }
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }
+

@@ -56,4 +56,8 @@ public class ChooseStoreForm extends JDialog {
 
         setVisible(true);
     }
+
+    public static void main(String[] args) {
+        ChooseStoreForm chooseStoreForm=new ChooseStoreForm();
+    }
 }

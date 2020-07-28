@@ -1,5 +1,6 @@
 package forms;
 
+import models.entities.Import;
 import models.entities.product;
 import utils.DBConnection;
 import utils.setUIFont;
@@ -7,6 +8,8 @@ import utils.setUIFont;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class AddProductForm extends JDialog {
     public AddProductForm() {
@@ -76,6 +79,13 @@ public class AddProductForm extends JDialog {
                         tfProductContent.setText(null);
                         String[] comboboxArr = db.getComboboxString("select productid from product").split(",");
                         ImportForm.boxProduct.setModel(new DefaultComboBoxModel(comboboxArr));
+                        ComboboxToolTipRender productRender = new ComboboxToolTipRender();
+                        ImportForm.boxProduct.setRenderer(productRender);
+                        String []  productToolTipArr = db.getProductInformation("product").split("\\.");
+                        List<String> listProduct = Arrays.asList(productToolTipArr);
+                        productRender.setTooltips(listProduct);
+                        ImportForm.boxProduct.setBounds(110, 10, 180, 25);
+                        ComboboxDecorator.decorate(ImportForm.boxProduct, true);
                     }
                 } else {
                 JOptionPane.showMessageDialog(rootPane,"Product already exists");
@@ -86,5 +96,9 @@ public class AddProductForm extends JDialog {
         });
         add(btnAdd);
         setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        AddProductForm addProductForm=new AddProductForm();
     }
 }

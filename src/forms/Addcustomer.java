@@ -128,30 +128,30 @@ public class Addcustomer extends JDialog {
                 preparedStatement.setString(5, tfaddress);
                 preparedStatement.setString(6, String.valueOf(boxcitys));
                 if (!tfname.equals("")) {
-                    if (!tfphone.equals("")) {
-                        if (!tfemail.equals("")) {
-                            if (!tfaddress.equals("")) {
-                                if (CheckPhone(tfphone)) {
-                                    preparedStatement.execute();
-                                    JOptionPane.showMessageDialog(rootPane, "Add Success");
-                                    textField_name.setText("");
-                                    textField_age.setText("");
-                                    textField_phone.setText("");
-                                    textField_email.setText("");
-                                    textField_address.setText("");
-                                    boxCity.setSelectedItem("");
+                        if (!tfphone.equals("")) {
+                            if (!tfemail.equals("")) {
+                                if (!tfaddress.equals("")) {
+                                    if (CheckPhone(tfphone)) {
+                                        preparedStatement.execute();
+                                        JOptionPane.showMessageDialog(rootPane, "Add Success");
+                                        textField_name.setText("");
+                                        textField_age.setText("");
+                                        textField_phone.setText("");
+                                        textField_email.setText("");
+                                        textField_address.setText("");
+                                        boxCity.setSelectedItem("");
+                                    } else {
+                                        JOptionPane.showMessageDialog(rootPane, "PhoneNumber was available");
+                                    }
                                 } else {
-                                    JOptionPane.showMessageDialog(rootPane, "PhoneNumber was available");
+                                    JOptionPane.showMessageDialog(rootPane, "Please enter your address");
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(rootPane, "Please enter your address");
+                                JOptionPane.showMessageDialog(rootPane, "Please enter your email");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(rootPane, "Please enter your email");
+                            JOptionPane.showMessageDialog(rootPane, "Please enter your phone");
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane, "Please enter your phone");
-                    }
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Please enter your name");
                 }

@@ -1,6 +1,7 @@
 package forms;
 
 import models.entities.Import;
+import models.entities.debt;
 import models.entities.depot;
 import utils.DBConnection;
 import utils.setUIFont;
@@ -27,7 +28,7 @@ public class ImportForm extends JDialog {
         setResizable(false);
         setTitle("Import");
         setUIFont.Font(new FontUIResource("Arial", Font.PLAIN, 12));
-        setBounds(100, 100, 450, 500);
+        setBounds(300, 100, 450, 500);
         setLayout(null);
 
         JLabel lblProduct = new JLabel("Product");
@@ -39,7 +40,7 @@ public class ImportForm extends JDialog {
         boxProduct = new JComboBox(comboboxArr);
         ComboboxToolTipRender productRender = new ComboboxToolTipRender();
         boxProduct.setRenderer(productRender);
-        String []  productToolTipArr = db.getProductInformation("product").split(",");
+        String []  productToolTipArr = db.getProductInformation("product").split("!");
         List<String> listProduct = Arrays.asList(productToolTipArr);
         productRender.setTooltips(listProduct);
         boxProduct.setBounds(110, 10, 180, 25);
@@ -115,16 +116,25 @@ public class ImportForm extends JDialog {
         tfExpDate.setBounds(110,260,180,25);
         add(tfExpDate);
 
+        JLabel lblPaymentPeriod = new JLabel("Payment Date");
+        lblPaymentPeriod.setBounds(30,310,80,25);
+        add(lblPaymentPeriod);
+
+        JTextField tfPaymentPeriod = new JTextField("YYYY-MM-DD");
+        tfPaymentPeriod.setToolTipText("YYYY-MM-DD");
+        tfPaymentPeriod.setBounds(110,310,180,25);
+        add(tfPaymentPeriod);
+
         JButton btnCreate = new JButton("Create");
-        btnCreate.setBounds(120,310,120,25);
+        btnCreate.setBounds(120,360,120,25);
         btnCreate.addActionListener(e -> {
-            if(!tfExpDate.getText().matches("^\\d{4}-\\d{2}-\\d{2}$"))
+            if(!tfExpDate.getText().matches("^\\d{4}-\\d{2}-\\d{2}$")||!tfPaymentPeriod.getText().matches("^\\d{4}-\\d{2}-\\d{2}$"))
             {
                 JOptionPane.showMessageDialog(rootPane,"Wrong date format");
-
             }
             else {
-                String Strexpirationdate = tfExpDate.getText();
+                String StrExpirationDate = tfExpDate.getText();
+                String StrPaymentPeriod = tfPaymentPeriod.getText();
                 String product = boxProduct.getSelectedItem().toString();
             int supplier = db.getID("Select supplierid from supplier where suppliername ='"+boxSupplier.getSelectedItem().toString()+"'");
             price = tfPrice.getText();
@@ -167,19 +177,24 @@ public class ImportForm extends JDialog {
                             String[] unitPart = boxUnit.getSelectedItem().toString().split(" ");
                             imp.setUnit(db.getID("Select unitid from unit where unitname =N'" + unitPart[1] + "' and unitconvertvalue =" + unitPart[3] + " and unitconvertname =N'" + unitPart[4] + "'"));
                             imp.setEmployeeid(1);// nho sua
-                            imp.setExpirationdate(Strexpirationdate);
+                            imp.setExpirationdate(StrExpirationDate);
                             if (db.Create(imp)) {
                                 int realQuantity = quantity * Integer.parseInt(unitPart[3]);
+                                Float value = realQuantity*Float.valueOf(price);
+                                debt dt = new debt(supplier,value,StrPaymentPeriod,"Chưa thanh toán");
+                                db.Create(dt);
                                 ArrayList<Object> ob = db.getAllData("select top 1 importid,date  from import where productid  ='"+product+"' order by importid desc");
                                 Timestamp importdate = (Timestamp) ob.get(1);
                                 String importid = ob.get(0).toString();
-                                depot d = new depot(importid,product,realQuantity,p,Strexpirationdate,importdate);
+                                depot d = new depot(importid,product,realQuantity,p,StrExpirationDate,importdate);
                                 db.Create(d);
 //                                checkCrt = true;
 //                                boolean checkAdd = true;
                                 JOptionPane.showMessageDialog(rootPane, "Create successfully");
                                 tfPrice.setText(null);
                                 tfQuantity.setText(null);
+                                tfExpDate.setText(null);
+                                tfPaymentPeriod.setText(null);
                                 productName = db.getName("Select productname from product where productid ='" + product + "'");
                                 ///add su kien sua
 //                                if (checkCrt) {
@@ -200,7 +215,7 @@ public class ImportForm extends JDialog {
                                     //lay du lieu vua moi add
                                     ArrayList<Object> obData = db.getAllData("select importid,productname , productcontent, depot.quantity, depot.price, suppliername,importdate,expirationdate\n" +
                                                     "from depot join product on  depot.productid = product.productid\n" +
-                                                    "join supplier on product.supplierid = supplier.supplierid where importid ='"+importid+"'");
+                                                    "join supplier on product.supplierid = supplier.supplierid where importid ='"+importid+"' and depot.productid ='"+product+"'");
                                     //set layout lai cho panel body
                                     DepotForm.tp.pnlAllData.setLayout(new GridLayout(db.getRowCount("depot"),0));
                                     int column = DepotForm.tp.column;

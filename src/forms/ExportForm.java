@@ -47,15 +47,20 @@ public class ExportForm extends JDialog {
         add(lblNewLabel_2);
 
         JLabel lblNewLabel_5 = new JLabel();
-        lblNewLabel_5.setBounds(95, 210, 80, 12);
+        lblNewLabel_5.setBounds(95, 210, 150, 12);
         lblNewLabel_5.setForeground(Color.green);
         add(lblNewLabel_5);
 
-        String[] strImport = db.getComboboxString("Select importid from depot").split(",");
+        String[] strProduct = db.getComboboxString("Select distinct productid from depot").split(",");
+        JComboBox comboBox_1 = new JComboBox(strProduct);
+        String[] strImport = db.getComboboxString("Select importid from depot where productid ='"+comboBox_1.getSelectedItem().toString()+ "'").split(",");
         JComboBox comboBox_2 = new JComboBox(strImport);
+        String [] StrImport = db.getComboboxString("Select importid from depot where productid = '"+comboBox_1.getSelectedItem().toString()+"'").split(",");
+        comboBox_2.setModel(new DefaultComboBoxModel(StrImport));
         comboBox_2.addActionListener(e -> {
             try{
-                Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
+
+                Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"' and productid= '"+comboBox_1.getSelectedItem().toString()+"'");
                 quantityLeft = "Remaining: "+Quantity;
                 lblNewLabel_5.setText(quantityLeft);
             }catch (Exception ex)
@@ -66,23 +71,16 @@ public class ExportForm extends JDialog {
         comboBox_2.setBounds(89, 130, 200, 25);
         add(comboBox_2);
 
-        Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
-        quantityLeft = "Remaining: "+ Quantity;
-        lblNewLabel_5.setText(quantityLeft);
-
         JLabel lblNewLabel_1 = new JLabel("Product");
         lblNewLabel_1.setBounds(10, 80, 80, 25);
         add(lblNewLabel_1);
-
-        String[] strProduct = db.getComboboxString("Select distinct productid from depot").split(",");
-        JComboBox comboBox_1 = new JComboBox(strProduct);
-        String [] productToolTipArr = db.getProductInformation("depot").split(",");
+        String [] productToolTipArr = db.getProductInformation("depot").split("!");
         comboBox_1.addActionListener(e -> {
             try{
                 String productid = comboBox_1.getSelectedItem().toString();
                 String [] newStrImport = db.getComboboxString("Select importid from depot where productid = '"+productid+"'").split(",");
                 comboBox_2.setModel(new DefaultComboBoxModel(newStrImport));
-                Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
+                Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"' and productid ='"+productid+"'");
                 quantityLeft = "Remaining: "+Quantity;
                 lblNewLabel_5.setText(quantityLeft);
 
@@ -91,6 +89,10 @@ public class ExportForm extends JDialog {
                 ex.printStackTrace();
             }
         });
+        String productid = comboBox_1.getSelectedItem().toString();
+        Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"' and productid ='"+productid+"'");
+        quantityLeft = "Remaining: "+ Quantity;
+        lblNewLabel_5.setText(quantityLeft);
         List<String> productToolTip = Arrays.asList(productToolTipArr);
         ComboboxToolTipRender productRender = new ComboboxToolTipRender();
         comboBox_1.setRenderer(productRender);
@@ -164,7 +166,7 @@ public class ExportForm extends JDialog {
                           if(db.Create(ex))
                           {
                               JOptionPane.showMessageDialog(rootPane,"Create sucessfully");
-                              Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"'");
+                              Quantity = db.getID("Select quantity from depot where importid ='"+comboBox_2.getSelectedItem().toString()+"' and productid ='"+productid+"'");
                               quantityLeft = "Remaining: "+Quantity;
                               lblNewLabel_5.setText(quantityLeft);
                               textField.setText(null);
