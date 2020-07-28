@@ -3,7 +3,6 @@ package models.entities;
 public class supplier {
     public int supplierid;
     public String suppliername, supplierphonenumber, supplieremail, supplieraddress;
-    public float dept;
 
     public int getSupplierid() {
         return supplierid;
@@ -45,11 +44,4 @@ public class supplier {
         this.supplieraddress = supplieraddress;
     }
 
-    public float getDept() {
-        return dept;
-    }
-
-    public void setDept(float dept) {
-        this.dept = dept;
-    }
 }

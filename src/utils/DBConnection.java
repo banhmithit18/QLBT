@@ -40,7 +40,7 @@ public class DBConnection<T> {
             String strReturn = "";
             while (rs.next()) {
                 strReturn += "<html> Name: " + rs.getString("productname") + "<br>" + " Content :" + rs.getString("productcontent") + "</html>";
-                strReturn += ".";
+                strReturn += "!";
             }
             strReturn = strReturn.substring(0, strReturn.length() - 1);
             return strReturn;

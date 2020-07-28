@@ -214,6 +214,7 @@ public class DepotForm extends JDialog {
 
 
 
+
         });
 
         //add 2 panel to box

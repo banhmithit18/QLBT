@@ -100,7 +100,6 @@ public class Addsupplier extends JDialog {
             sp.setSupplierphonenumber(phonesupplier);
             sp.setSupplieremail(emailsupplier);
             sp.setSupplieraddress(addresssupplier);
-            sp.setDept(deptsupplier);
             try {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";

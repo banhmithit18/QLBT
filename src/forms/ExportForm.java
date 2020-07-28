@@ -74,7 +74,7 @@ public class ExportForm extends JDialog {
         JLabel lblNewLabel_1 = new JLabel("Product");
         lblNewLabel_1.setBounds(10, 80, 80, 25);
         add(lblNewLabel_1);
-        String [] productToolTipArr = db.getProductInformation("depot").split("\\.");
+        String [] productToolTipArr = db.getProductInformation("depot").split("!");
         comboBox_1.addActionListener(e -> {
             try{
                 String productid = comboBox_1.getSelectedItem().toString();
