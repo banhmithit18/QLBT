@@ -9,11 +9,13 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class InventoryForm extends JDialog {
     int row;
     public static Dimension d;
-    public static TableDepot tp;
+    public static TableInventory tp;
     public InventoryForm(String storeId) {
         //setting form
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -22,7 +24,7 @@ public class InventoryForm extends JDialog {
         setResizable(false);
         setUIFont f = new setUIFont();
         f.Font(new FontUIResource("Arial", Font.PLAIN, 12));
-        setTitle("Depot");
+        setTitle("Inventory");
         //add root panel
         JPanel rootPnl = (JPanel) getContentPane();
         rootPnl.setLayout(new BoxLayout(rootPnl, BoxLayout.Y_AXIS));
@@ -52,6 +54,16 @@ public class InventoryForm extends JDialog {
         boxSearch.setBounds(230, 40, 120, 25);
         pnlHead.add(boxSearch);
 
+        JButton btnChkExp = new JButton("Check Expiration");
+        btnChkExp.setFont(new Font("Arial",Font.PLAIN,10));
+        btnChkExp.setBounds(10,90,120,25);
+        pnlHead.add(btnChkExp);
+        btnChkExp.addActionListener(e -> {
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+
+            System.out.println(timeStamp);
+        });
+
 //        JButton btnSearch = new JButton("Search");
 //        btnSearch.setBounds(120, 80, 120, 25);
 
@@ -64,7 +76,7 @@ public class InventoryForm extends JDialog {
                 "from inventory join product on  inventory.productid = product.productid\n" +
                 "join supplier on product.supplierid = supplier.supplierid where storeid ="+storeId;
         d = new Dimension(115, 20);
-        tp = new TableDepot();
+        tp = new TableInventory();
         JScrollPane sp = tp.table("inventory", columnname, query, d, true);
         //tao su kien search
         tfSearch.addKeyListener(new KeyAdapter() {

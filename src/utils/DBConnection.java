@@ -1,5 +1,7 @@
 package utils;
 
+import forms.getDateOf;
+
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
@@ -290,5 +292,64 @@ public class DBConnection<T> {
         }
         return 0;
     }
-
+    public ArrayList<Float> callProd(int month, int year, int date, String storeid,String type) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            ArrayList<Float> data = new ArrayList<>();
+            Statement stmt = con.createStatement();
+            if(storeid.equals("All"))
+            {
+                if (type.equals("Day")) {
+                    for (int i = 1; i <= date; i++) {
+                        String query = "totalperDayAll '" + year + "-" + month + "-" + i + "', '" + year + "-" + month + "-" + i + "'";
+                        ResultSet rs = stmt.executeQuery(query);
+                        while (rs.next()) {
+                            data.add(rs.getFloat(1));
+                        }
+                    }
+                }
+                else if ( type.equals("Month"))
+                {
+                    for(int i = 1;i<=12;i++)
+                    {
+                        int lastDate = getDateOf.Month(i);
+                        String query = "totalperDayAll '" + year + "-" + i + "-" + 1 + "', '" + year + "-" + i + "-" + lastDate + "'" ;
+                        ResultSet rs = stmt.executeQuery(query);
+                        while (rs.next())
+                        {
+                            data.add(rs.getFloat(1));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (type.equals("Day")) {
+                    for (int i = 1; i <= date; i++) {
+                        String query = "totalperDay '" + year + "-" + month + "-" + i + "'," + storeid+",'" + year + "-" + month + "-" + i + "'";
+                        ResultSet rs = stmt.executeQuery(query);
+                        while (rs.next()) {
+                            data.add(rs.getFloat(1));
+                        }
+                    }
+                }
+                else if ( type.equals("Month"))
+                {
+                    for(int i = 1;i<=12;i++)
+                    {
+                        int lastDate = getDateOf.Month(i);
+                        String query = "totalperDay '" + year + "-" + i + "-" + 1 + "'," + storeid+",'" + year + "-" + i + "-" + lastDate + "'" ;
+                        ResultSet rs = stmt.executeQuery(query);
+                        while (rs.next())
+                        {
+                            data.add(rs.getFloat(1));
+                        }
+                    }
+                }
+            }
+            return data;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -12,6 +12,7 @@ public class program {
 //        SellForm2 sf=new SellForm2();
 //        DepotForm df=new DepotForm();
 //        MainCustomer mc=new MainCustomer();
+
     }
 
 }
