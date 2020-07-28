@@ -2,6 +2,7 @@ package forms;
 
 import models.entities.product2;
 import org.w3c.dom.html.HTMLTableCaptionElement;
+import utils.DBConnection;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -17,10 +18,12 @@ public class SellForm2 extends JFrame {
     JTextField tfProductName, tfExpirationDate, tfDiscount;
     JTextField tfPrice;
     JTextField tfTotal;
-    public static JLabel lblTotal_Money, lblEmployeeName, lblExcessCase_Money, lbl_CusName, lbl_CusAge, lbl_CusAddress;
+    public static JComboBox cbImportID;
+    public static JLabel lblTotal_Money, lblEmployeeName, lblExcessCase_Money, lbl_CusName, lbl_CusAge, lbl_CusAddress
+            ,lblImportID;
 
 
-    int inventory_1;
+    int inventory_1, inventory;
     int Total = 0;
     public static JTable table;
     public static String urlConnection = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
@@ -47,6 +50,13 @@ public class SellForm2 extends JFrame {
         pnlHeader.setBounds(0, 0, 1291, 52);
         Contentpane.add(pnlHeader);
         pnlHeader.setLayout(null);
+        DBConnection db = new DBConnection();
+
+        JLabel lblIconTitle = new JLabel(" APTECH DRUGSTORE");
+        lblIconTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblIconTitle.setIcon(new ImageIcon("src\\icon\\Shopping.png"));
+        lblIconTitle.setBounds(27, 7, 227, 37);
+        pnlHeader.add(lblIconTitle);
 
         JLabel lblStaff = new JLabel("Employee:");
         lblStaff.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -174,7 +184,7 @@ public class SellForm2 extends JFrame {
         pnlPey.add(pnlStartPayment);
         pnlStartPayment.setLayout(null);
 
-        JButton btnNewButton = new JButton("Pey");
+        JButton btnNewButton = new JButton("Pay");
         btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 30));
         btnNewButton.setBounds(0, 0, 396, 60);
         btnNewButton.setFocusPainted(false);
@@ -211,7 +221,7 @@ public class SellForm2 extends JFrame {
                 new Object[][]{
                 },
                 new String[]{
-                        "code","productname", "quantity", "price", "expirationdate", "total",
+                        "productid","productname", "quantity", "price", "expirationdate", "total",
                 }
         ));
         scrollPane.setViewportView(table);
@@ -267,6 +277,14 @@ public class SellForm2 extends JFrame {
         lblPrice.setBounds(624, 27, 45, 13);
         pnlListOrder.add(lblPrice);
 
+        cbImportID = new JComboBox();
+        cbImportID.setBounds(47, 109, 151, 21);
+        pnlListOrder.add(cbImportID);
+
+        lblImportID = new JLabel("Import ID:");
+        lblImportID.setBounds(95, 86, 78, 13);
+        pnlListOrder.add(lblImportID);
+
         JLabel lblTotal = new JLabel("Total:");
         lblTotal.setBounds(737, 27, 66, 13);
         pnlListOrder.add(lblTotal);
@@ -315,7 +333,7 @@ public class SellForm2 extends JFrame {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     super.keyReleased(e);
                     String value = tfProductCode.getText();
-                    String sql = "select product.productname, quantity, price, expirationdate from product inner join inventory on product.productid = inventory.productid where code like  '" + value + "%'";
+                    String sql = "select inventory.productid, product.productname,inventory.importid, quantity, price, expirationdate from product inner join inventory on product.productid = inventory.productid where product.productid like  '" + value + "%'";
                     try {
                         String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
                         Connection conn = DriverManager.getConnection(connectionUrl);
@@ -331,8 +349,12 @@ public class SellForm2 extends JFrame {
                             tfQuantity.setText("");
                             lblInventory_Quantify.setText("");
                             tfExpirationDate.setText("");
+
                         } else {
                             String name = rs.getString("productname");
+                            String ar =db.getComboboxString("select importid from inventory where productid = '" +rs.getString("productid")+ "'");
+                            String [] strArr = ar.split(",");
+                            cbImportID.setModel(new DefaultComboBoxModel(strArr));
                             float price = rs.getFloat("price");
                             String quantity = rs.getString("quantity");
                             inventory_1 = rs.getInt("quantity");
@@ -340,6 +362,7 @@ public class SellForm2 extends JFrame {
                             tfPrice.setText(String.valueOf(price));
                             lblInventory_Quantify.setText(quantity);
                             tfExpirationDate.setText(rs.getString("expirationdate"));
+                            inventory = rs.getInt("quantity");
                         }
                     } catch (Exception throwables) {
                         throwables.printStackTrace();
@@ -347,7 +370,75 @@ public class SellForm2 extends JFrame {
                 }
             }
         });
-
+        cbImportID.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try(Connection con = DriverManager.getConnection(urlConnection)){
+                    String query = "select quantity from inventory where productid = '" +tfProductCode.getText()+ "' and importid = '" +cbImportID.getSelectedItem()+ "'";
+                    Statement stmt = con.createStatement();
+                    ResultSet  rs = stmt.executeQuery(query);
+                    if(rs.next()){
+                        lblInventory_Quantify.setText(String.valueOf(rs.getInt("quantity")));
+                        inventory = rs.getInt("quantity");
+                    }
+                }catch (Exception a){
+                    a.printStackTrace();
+                }
+            }
+        });
+//        tfQuantity.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//                super.keyReleased(e);
+////                int quantity = Integer.parseInt(tfQuantity.getText());
+//                if (tfQuantity.getText().equals("")) {
+//                    int quantity = 0;
+//                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
+//                    lblInventory_Quantify.setText(String.valueOf(inventory));
+//                    tfTotal.setText("");
+//                } else {
+//                    int quantity = Integer.parseInt(tfQuantity.getText());
+//                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
+//                    float price = Float.parseFloat(tfPrice.getText());
+//                    if (quantity > inventory) {
+//                        JOptionPane.showMessageDialog(null, "inventory only 300 products left");
+//                        lblInventory_Quantify.setText(String.valueOf(inventory));
+//                        tfQuantity.setText("");
+//                        tfTotal.setText("");
+//                    } else {
+//                        lblInventory_Quantify.setText(String.valueOf(inventory - quantity));
+//                        tfTotal.setText(String.valueOf(quantity * price * 1000));
+//                    }
+//                }
+//            }
+//        });
+        tftCusPhone.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    super.keyPressed(e);
+                    String name, address;
+                    int age;
+                    try(Connection con = DriverManager.getConnection(urlConnection)){
+                        String query = "select * from customer where customerphone = '" + tftCusPhone.getText() + "'";
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery(query);
+                        if(rs.next()){
+                            lbl_CusName.setText(rs.getString("customername"));
+                            lbl_CusAge.setText(String.valueOf(rs.getInt("customerage")));
+                            lbl_CusAddress.setText(rs.getString("customeraddress"));
+                        }else {
+                            JOptionPane.showMessageDialog(null, "This customer does not exist");
+                            lbl_CusName.setText("");
+                            lbl_CusAge.setText("");
+                            lbl_CusAddress.setText("");
+                        }
+                    }catch (Exception a){
+                        a.printStackTrace();
+                    }
+                }
+            }
+        });
         //----BTN SEARCH CUS-------
         btnSearchCus.addActionListener(new ActionListener() {
             @Override
@@ -381,24 +472,30 @@ public class SellForm2 extends JFrame {
                 super.keyReleased(e);
                 if (tfQuantity.getText().equals("")) {
                     int quantity = 0;
-                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
-                    lblInventory_Quantify.setText(String.valueOf(inventory_1));
+//                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
+                    lblInventory_Quantify.setText(String.valueOf(inventory));
                     tfTotal.setText("");
 
                 } else {
                     int quantity = Integer.parseInt(tfQuantity.getText());
-                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
+//                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
                     float price = Float.parseFloat(tfPrice.getText());
-                    if (quantity > inventory_1) {
+                    if (quantity > inventory) {
                         JOptionPane.showMessageDialog(null, "inventory only 300 products left");
-                        lblInventory_Quantify.setText(String.valueOf(inventory_1));
+                        lblInventory_Quantify.setText(String.valueOf(inventory));
                         tfQuantity.setText("");
                         tfTotal.setText("");
                     } else {
-                        lblInventory_Quantify.setText(String.valueOf(inventory_1 - quantity));
+                        lblInventory_Quantify.setText(String.valueOf(inventory - quantity));
                         tfTotal.setText(String.valueOf(quantity * price * 1000));
                     }
                 }
+            }
+        });
+        btnAddCus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Addcustomer ac = new Addcustomer();
             }
         });
 
@@ -430,7 +527,7 @@ public class SellForm2 extends JFrame {
                         try(Connection con = DriverManager.getConnection(urlConnection)){
                             String query = "update inventory set quantity = quantity - " + tfQuantity.getText() + " from inventory inner join product" +
                                     " on inventory.productid = product.productid " +
-                                    "where code = '" + tfProductCode.getText() + "'";
+                                    "where product.productid = '" + tfProductCode.getText() + "' and importid = '" +cbImportID.getSelectedItem()+ "'";
                             Statement stmt = con.createStatement();
                             stmt.executeUpdate(query);
                         }catch (Exception a){
@@ -536,6 +633,17 @@ public class SellForm2 extends JFrame {
         setVisible(true);
     }
 
+    public String getProductid(String code){
+        try(Connection con = DriverManager.getConnection(urlConnection)){
+            String query = "select productid from product where productid = '" +code+ "'";
+            Statement stmt = con.createStatement();
+            stmt.executeQuery(query);
+        }catch (Exception a){
+            a.printStackTrace();
+        }
+        return "";
+    }
+
     public static JPopupMenu createYourPopUp(int rowindex, JTable table) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem edit = new JMenuItem("Edit Quantity");
@@ -549,9 +657,8 @@ public class SellForm2 extends JFrame {
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
 
                 try(Connection con = DriverManager.getConnection(urlConnection)){
-                    String query = "select quantity from inventory inner join product\n" +
-                            "on inventory.productid = product.productid\n" +
-                            "where code = '" + table.getValueAt(select, 0) +"'";
+                    String query = "select quantity from inventory " +
+                            "where productid = '" + table.getValueAt(select, 0) +"' and importid = '" +cbImportID.getSelectedItem()+ "'";
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
                     if(rs.next()){
@@ -580,9 +687,8 @@ public class SellForm2 extends JFrame {
                         int sl = Integer.parseInt(quantity_new) - Quantity_Curent;
                         try(Connection con = DriverManager.getConnection(urlConnection)){
                             String query = "update inventory set quantity = quantity - " + sl + " " +
-                                    "from inventory inner join product " +
-                                    "on inventory.productid = product.productid " +
-                                    "where code = '" + table.getValueAt(select, 0) +"'";
+                                    "from inventory " +
+                                    "where productid = '" + table.getValueAt(select, 0) +"' and importid = '" +cbImportID.getSelectedItem()+ "'";
                             Statement stmt = con.createStatement();
                             stmt.executeUpdate(query);
                         }catch (Exception a){
@@ -593,9 +699,8 @@ public class SellForm2 extends JFrame {
                         int sl =  Quantity_Curent - Integer.parseInt(quantity_new);
                         try(Connection con = DriverManager.getConnection(urlConnection)){
                             String query = "update inventory set quantity = quantity + " + sl + " " +
-                                    "from inventory inner join product " +
-                                    "on inventory.productid = product.productid " +
-                                    "where code = '" + table.getValueAt(select, 0) +"'";
+                                    "from inventory " +
+                                    "where productid = '" + table.getValueAt(select, 0) +"' and importid = '" +cbImportID.getSelectedItem()+ "'";
                             Statement stmt = con.createStatement();
                             stmt.executeUpdate(query);
                         }catch (Exception a){
@@ -612,9 +717,8 @@ public class SellForm2 extends JFrame {
                 int select = table.getSelectedRow();
                 DefaultTableModel model = (DefaultTableModel) table.getModel();
                 try(Connection con = DriverManager.getConnection(urlConnection)){
-                    String query = "update inventory set quantity = quantity + " + table.getValueAt(select, 2) + " from inventory inner join product" +
-                            " on inventory.productid = product.productid " +
-                            "where code = '" + table.getValueAt(select, 0) + "'";
+                    String query = "update inventory set quantity = quantity + " + table.getValueAt(select, 2) + " from inventory " +
+                            "where productid = '" + table.getValueAt(select, 0) + "' and importid = '" +cbImportID.getSelectedItem()+"'";
                     Statement stmt = con.createStatement();
                     stmt.executeUpdate(query);
                     model.removeRow(select);
@@ -632,11 +736,11 @@ public class SellForm2 extends JFrame {
 
             }
         });
+
         popup.add(edit);
         popup.add(delete);
         return popup;
     }
-
     public static void main(String[] args) {
         SellForm2 sellForm2=new SellForm2();
     }
