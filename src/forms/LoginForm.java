@@ -138,8 +138,8 @@ public class LoginForm extends JFrame {
                     userName = username;
                     UserId = tfUser.getText();
                     tfUser.setText(null);
-                    pfPass.setText(null);
-                    pfPass.setEchoChar(originalEchoChar);
+                    tpPass.setText(null);
+                    tpPass.setEchoChar(originalEchoChar);
                     SellForm2 sellForm2=new SellForm2();
                     setVisible(false);
 

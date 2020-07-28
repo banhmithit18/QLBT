@@ -9,8 +9,12 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class InventoryForm extends JDialog {
     int row;
@@ -57,12 +61,7 @@ public class InventoryForm extends JDialog {
         JButton btnChkExp = new JButton("Check Expiration");
         btnChkExp.setFont(new Font("Arial",Font.PLAIN,10));
         btnChkExp.setBounds(10,90,120,25);
-        pnlHead.add(btnChkExp);
-        btnChkExp.addActionListener(e -> {
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
-            System.out.println(timeStamp);
-        });
 
 //        JButton btnSearch = new JButton("Search");
 //        btnSearch.setBounds(120, 80, 120, 25);
@@ -154,7 +153,45 @@ public class InventoryForm extends JDialog {
                 }
             }
         });
+        pnlHead.add(btnChkExp);
+        btnChkExp.addActionListener(e -> {
+            String outOfDateProduct = "";
+            String nearOutOfDateProduct = "";
+            long currentDay = System.currentTimeMillis();
+            long dayInMil = 604800000 ;
+            DBConnection db = new DBConnection();
+            for ( int i = 0 ;i<db.getRowCount("inventory");i++)
+            {
+               String expDayInString  = ((JLabel)tp.pnlData.get(i).getComponent(7)).getText();
+               SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+               Date date = null;
+                try {
+                     date = sdf.parse(expDayInString);
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                if(  date.getTime() - currentDay <= dayInMil && date.getTime() -currentDay > 0)
+                {
+                    String imp = ((JLabel)tp.pnlData.get(i).getComponent(0)).getText();
+                    String proName = ((JLabel)tp.pnlData.get(i).getComponent(1)).getText();
+                    nearOutOfDateProduct = nearOutOfDateProduct + imp +" - "+proName+"\n";
+                }
+                else if ( date.getTime() -currentDay <= 0)
+                {
+                    String imp = ((JLabel)tp.pnlData.get(i).getComponent(0)).getText();
+                    String proName = ((JLabel)tp.pnlData.get(i).getComponent(1)).getText();
+                    outOfDateProduct = outOfDateProduct + imp +" - "+proName +"\n";
+                }
+            }
+            ExpForm ep = new ExpForm(nearOutOfDateProduct,"Near Out of Date Product");
+            ExpForm epx = new ExpForm(outOfDateProduct,"Out of Date Product");
 
+
+
+
+
+
+        });
         pnlBody.add(sp);
 
         //add 2 panel to box

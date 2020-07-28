@@ -60,7 +60,6 @@ public class Pay extends JDialog  {
                 String productAmount=(String)model.getValueAt(i, 5);
 
                 area.setText(area.getText() + "productname: " + productname + "\n" +  quantity + "\t" + productprice + "\t" + productAmount + "\n\n");
-                area.setText(area.getText()+ "Expriratiolndate: "  + expriratiolndate + "\n\n");
                 area.setText(area.getText() + "--------------------------------------------------------------\n");
 
             }
@@ -72,7 +71,7 @@ public class Pay extends JDialog  {
             area.setText(area.getText()  + "Balance : " +balance+ "\n\n");
             area.setText(area.getText()+"\n");
             area.setText(area.getText()+ "*****************************************************************\n");
-            area.setText(area.getText()+ "                  THANK +++YOU SO MUCH !                             \n");
+            area.setText(area.getText()+ "                  THANK YOU SO MUCH !                             \n");
             area.setText(area.getText()+ "*****************************************************************\n\n\n") ;
             area.setText(area.getText()+"\n");
             area.setText(area.getText()+"\n");

@@ -39,7 +39,7 @@ public class ImportForm extends JDialog {
         boxProduct = new JComboBox(comboboxArr);
         ComboboxToolTipRender productRender = new ComboboxToolTipRender();
         boxProduct.setRenderer(productRender);
-        String []  productToolTipArr = db.getProductInformation("product").split(",");
+        String []  productToolTipArr = db.getProductInformation("product").split("\\.");
         List<String> listProduct = Arrays.asList(productToolTipArr);
         productRender.setTooltips(listProduct);
         boxProduct.setBounds(110, 10, 180, 25);
