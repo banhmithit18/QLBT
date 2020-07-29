@@ -161,7 +161,7 @@ public class ExportForm extends JDialog {
                           ex.setDate(TimeStampConvert.getTimeStamp());
                           ex.setPrice(Integer.parseInt(price));
                           ex.setQuantity(quantity);
-                          ex.setEmployeeid(1); // nho doi
+                          ex.setEmployeeid(LoginForm.UserId); // nho doi
                           ex.setExpirationdate(db.getName("Select expirationdate from depot where importid ='"+importId+"'"));
                           if(db.Create(ex))
                           {

@@ -44,7 +44,7 @@ public class PayForm extends JDialog {
                 } else {
                     DBConnection db = new DBConnection();
                     String receiptType = "Thanh toán";
-                    int employeeid = 1; // nho sua
+                    int employeeid = LoginForm.UserId; // nho sua
                     receipt r = new receipt(receiptType, (float) amount, supplier, employeeid, TimeStampConvert.getTimeStamp());
                     if (db.Create(r)) {
 

@@ -22,7 +22,7 @@ public class PartnerForm extends JPanel {
         add(pnlTitle);
         pnlTitle.setLayout(null);
 
-        JLabel lblTitle = new JLabel("Partner");
+        JLabel lblTitle = new JLabel("Utilities");
         lblTitle.setFont(new Font("Times New Roman", Font.BOLD, 25));
         lblTitle.setBounds(514, 20, 163, 47);
         pnlTitle.add(lblTitle);
@@ -39,7 +39,7 @@ public class PartnerForm extends JPanel {
         pnlContent.add(pnl_btnCustomer);
         pnl_btnCustomer.setLayout(null);
 
-        JButton btnCustomer = new JButton("Customer");
+        JButton btnCustomer = new JButton("Create Bar Chart");
         btnCustomer.setFont(new Font("Tahoma", Font.BOLD, 12));
         btnCustomer.setFocusPainted(false);
         btnCustomer.setContentAreaFilled(false);
@@ -50,6 +50,7 @@ public class PartnerForm extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                ChartForm cf = new ChartForm();
             }
 
             @Override
@@ -81,10 +82,7 @@ public class PartnerForm extends JPanel {
         btnSupplier.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                pnlContent_2.removeAll();
-                pnlContent_2.add(new SupplierForm());
-                pnlContent_2.repaint();
-                pnlContent_2.validate();
+               Addsupplier add = new Addsupplier();
             }
 
             @Override
@@ -99,6 +97,70 @@ public class PartnerForm extends JPanel {
                 pnl_btnSupplier.setBackground(new Color(230, 108, 108));
             }
         });
+
+        JPanel pnl_btnDebt = new JPanel();
+        pnl_btnDebt.setBackground(new Color(230, 108, 108));
+        pnl_btnDebt.setBounds(400, 10, 142, 54);
+        pnlContent.add(pnl_btnDebt);
+        pnl_btnDebt.setLayout(null);
+
+        JButton btnDebt = new JButton("Debt");
+        btnDebt.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnDebt.setFocusPainted(false);
+        btnDebt.setContentAreaFilled(false);
+        btnDebt.setBorderPainted(false);
+        btnDebt.setBounds(0, 0, 142, 54);
+        pnl_btnDebt.add(btnDebt);
+        btnDebt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                DebtForm df = new DebtForm();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                pnl_btnDebt.setBackground(new Color(179, 70, 62));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                pnl_btnDebt.setBackground(new Color(230, 108, 108));
+            }
+        });
+        JPanel pnl_btnUnit = new JPanel();
+        pnl_btnUnit.setBackground(new Color(230, 108, 108));
+        pnl_btnUnit.setBounds(575, 10, 142, 54);
+        pnlContent.add(pnl_btnUnit);
+        pnl_btnUnit.setLayout(null);
+
+        JButton btnUnit = new JButton("Add unit");
+        btnUnit.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnUnit.setFocusPainted(false);
+        btnUnit.setContentAreaFilled(false);
+        btnUnit.setBorderPainted(false);
+        btnUnit.setBounds(0, 0, 142, 54);
+        pnl_btnUnit.add(btnUnit);
+        btnUnit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                UnitForm u = new UnitForm();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                pnl_btnUnit.setBackground(new Color(179, 70, 62));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                pnl_btnUnit.setBackground(new Color(230, 108, 108));
+            }
+        });
+
 
         pnlContent_2 = new JPanel();
         pnlContent_2.setBounds(2, 74, 1098, 485);

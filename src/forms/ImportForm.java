@@ -176,7 +176,7 @@ public class ImportForm extends JDialog {
                             imp.setDate(TimeStampConvert.getTimeStamp());
                             String[] unitPart = boxUnit.getSelectedItem().toString().split(" ");
                             imp.setUnit(db.getID("Select unitid from unit where unitname =N'" + unitPart[1] + "' and unitconvertvalue =" + unitPart[3] + " and unitconvertname =N'" + unitPart[4] + "'"));
-                            imp.setEmployeeid(1);// nho sua
+                            imp.setEmployeeid(LoginForm.UserId);// nho sua
                             imp.setExpirationdate(StrExpirationDate);
                             if (db.Create(imp)) {
                                 int realQuantity = quantity * Integer.parseInt(unitPart[3]);

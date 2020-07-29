@@ -20,7 +20,8 @@ import java.util.Arrays;
 public class ChartForm extends JFrame {
     int month = 0;
     public ChartForm() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
         //setting form
         setBounds(100, 100, 1000, 600);
         setUIFont f = new setUIFont();
@@ -147,7 +148,7 @@ public class ChartForm extends JFrame {
             // day la ham de lay dc du lieu
             DefaultCategoryDataset dataset = createDataset(sort, data);
             // Create chart
-            JFreeChart chart = ChartFactory.createLineChart(
+            JFreeChart chart = ChartFactory.createBarChart(
 
                     "Sale Volume", // Chart title - tieu de bieu do
                     "", // X-Axis Label - ten cot doc

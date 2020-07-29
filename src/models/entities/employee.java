@@ -4,7 +4,7 @@ public class employee {
         public String employeename, employeephone, employeeemail, employeeaddress,username,password;
         public int storeid,checkacc;
 
-    public employee(String employeename, String employeephone, String employeeemail, String employeeaddress, String username, String password,int storeid) {
+    public employee(String employeename, String employeephone, String employeeemail, String employeeaddress, String username, String password,int storeid,int checkacc) {
         this.employeename = employeename;
         this.employeephone = employeephone;
         this.employeeemail = employeeemail;
@@ -12,7 +12,7 @@ public class employee {
         this.username = username;
         this.password = password;
         this.storeid = storeid;
-        checkacc = 0;
+        this.checkacc = checkacc;
     }
     public employee(){
         employeename = "";

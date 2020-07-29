@@ -16,7 +16,7 @@ public class CreateChart extends JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         JPanel contentPane = (JPanel) getContentPane();
         setBounds(100,100,1000,500);
-        JFreeChart chart = ChartFactory.createLineChart(
+        JFreeChart chart = ChartFactory.createBarChart(
 
                 "Sale Volume", // Chart title - tieu de bieu do
                 "", // X-Axis Label - ten cot doc

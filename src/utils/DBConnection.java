@@ -176,6 +176,26 @@ public class DBConnection<T> {
         }
         return false;
     }
+    public boolean checkacc(String query) {
+        try (Connection con = DriverManager.getConnection(urlConnection)) {
+            ;
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            if (rs.next()) {
+                if(rs.getInt(1) == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean updatePassword(String username, String password) {
         try (Connection con = DriverManager.getConnection(urlConnection)) {

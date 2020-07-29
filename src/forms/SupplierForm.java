@@ -4,14 +4,14 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class SupplierForm extends JPanel {
+public class SupplierForm extends JDialog {
     int row;
     public static Dimension d;
     public static TableDepot tp;
     public SupplierForm(){
         setBounds(0,0,1098, 485);
         setLayout(null);
-        setBorder(new LineBorder(new Color(0,0,0),1));
+        setModal(true);
         JPanel pnlTable = new JPanel();
         pnlTable.setBounds(10, 285, 1078, 190);
         add(pnlTable);
@@ -28,8 +28,8 @@ public class SupplierForm extends JPanel {
         lblTitle.setBounds(27, 0, 56, 18);
         pnlTitle.add(lblTitle);
 
-        String[] columnname = {"suppliername", "supplierphonenumber", "supplieremail", "supplieraddress", "dept"};
-        String query = "select suppliername , supplierphonenumber, supplieremail, supplieraddress, dept from supplier";
+        String[] columnname = {"suppliername", "supplierphonenumber", "supplieremail", "supplieraddress",};
+        String query = "select suppliername , supplierphonenumber, supplieremail, supplieraddress from supplier";
 
         d = new Dimension(164, 20);
         tp = new TableDepot();

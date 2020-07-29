@@ -18,7 +18,7 @@ public class AddEmployeeForm extends JDialog {
         setUIFont.Font(new FontUIResource("Arial",Font.PLAIN,12));
         setResizable(false);// hide icon java at the corner
         setTitle("Register");
-        setBounds(100,100,500,400);
+        setBounds(100,100,500,440);
         setLayout(null);
         JLabel lblUsername = new JLabel("Username");
         lblUsername.setBounds(30,30,120,25);
@@ -85,9 +85,18 @@ public class AddEmployeeForm extends JDialog {
         ComboboxDecorator.decorate(comboBox,true);
         comboBox.setBounds(120, 270, 200, 25);
         add(comboBox);
+
+        JLabel accType = new JLabel("Account Type");
+        accType.setBounds(30,310,130,25);
+        add(accType);
+
+        String [] arrType = {"Admin","Normal"};
+        JComboBox boxType = new JComboBox(arrType);
+        boxType.setBounds(120,310,200,25);
+        add(boxType);
         JButton btnAdd = new JButton("Register");
         btnAdd.setForeground(Color.white);
-        btnAdd.setBounds(150,315,100,25);
+        btnAdd.setBounds(150,355,100,25);
         btnAdd.setOpaque(true);
         btnAdd.setBackground(new Color(0,124,253));
         btnAdd.addActionListener(e -> {
@@ -97,6 +106,11 @@ public class AddEmployeeForm extends JDialog {
             String email = tfEmail.getText();
             String address = tfAddress.getText();
             String password =pfPassword.getText();
+            int accountType = 0;
+            if (boxType.getSelectedItem().toString().equals("Admin"))
+            {
+                accountType = 1;
+            }
             int store = Integer.parseInt(comboBox.getSelectedItem().toString());
             if(userName.isEmpty()||fullName.isEmpty()||phone.isEmpty()||email.isEmpty()||address.isEmpty()||password.isEmpty())
             {
@@ -106,7 +120,7 @@ public class AddEmployeeForm extends JDialog {
             {
                 if(!db.check("Select username from employee where username ='"+userName+"'"))
                 {
-                    employee emp = new employee(fullName,phone,email,address,userName,password,store);
+                    employee emp = new employee(fullName,phone,email,address,userName,password,store,accountType);
                     if(db.Create(emp))
                     {
                         JOptionPane.showMessageDialog(rootPane,"Successfully registered");

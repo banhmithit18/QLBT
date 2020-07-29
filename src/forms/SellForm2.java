@@ -29,7 +29,7 @@ public class SellForm2 extends JFrame {
     public static String urlConnection = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
 
     public SellForm2() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
         setBounds(140, 90, 1300, 643);
@@ -481,7 +481,7 @@ public class SellForm2 extends JFrame {
 //                    int inventory = Integer.parseInt(lblInventory_Quantify.getText());
                     float price = Float.parseFloat(tfPrice.getText());
                     if (quantity > inventory) {
-                        JOptionPane.showMessageDialog(null, "inventory only 300 products left");
+                        JOptionPane.showMessageDialog(null, "Product is not enough stock");
                         lblInventory_Quantify.setText(String.valueOf(inventory));
                         tfQuantity.setText("");
                         tfTotal.setText("");

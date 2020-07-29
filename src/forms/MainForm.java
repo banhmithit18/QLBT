@@ -1,5 +1,7 @@
 package forms;
 
+import utils.DBConnection;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
@@ -97,6 +99,8 @@ public class  MainForm extends JFrame {
         btnEmployee.setBounds(0, 0, 174, 44);
         pnl_EmployeeHome.add(btnEmployee);
 
+        DBConnection db = new DBConnection();
+
         JLabel lblIconEmployee = new JLabel("");
         lblIconEmployee.setIcon(new ImageIcon("src\\icon\\Employee.png"));
         lblIconEmployee.setBounds(10, 16, 45, 13);
@@ -105,26 +109,31 @@ public class  MainForm extends JFrame {
         btnEmployee.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                pnlContent.removeAll();
-                pnlContent.add(new AddEmployeeForm());
-                pnlContent.setLayout(null);
-                pnlContent.validate();
-                pnlContent.repaint();
+                if (db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+                {
+                    AddEmployeeForm add = new AddEmployeeForm();
+                }
+
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
+
                 super.mouseEntered(e);
                 pnl_EmployeeHome.setBackground(new Color(78, 82, 78));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
+
                 super.mouseExited(e);
                 pnl_EmployeeHome.setBackground(Color.LIGHT_GRAY);
             }
         });
+        if (!db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+        {
+            btnEmployee.setEnabled(false);
+        }
 
         ///----------Menu_Product-----------------
 
@@ -151,12 +160,14 @@ public class  MainForm extends JFrame {
         btnProduct.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                pnlContent.removeAll();
-                pnlContent.add(new ProductForm());
-                pnlContent.setLayout(null);
-                pnlContent.validate();
-                pnlContent.repaint();
+                if (!db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+                {
+                    InventoryForm i = new InventoryForm(String.valueOf(LoginForm.storeId));
+                }
+                else
+                {
+                    ChooseStoreForm csf = new ChooseStoreForm();
+                }
             }
 
             @Override
@@ -181,7 +192,7 @@ public class  MainForm extends JFrame {
         pnl_PartnerMenu.setBackground(Color.LIGHT_GRAY);
         pnlMenu.add(pnl_PartnerMenu);
 
-        JButton btnPartner = new JButton(" Partner");
+        JButton btnPartner = new JButton(" Utilities");
         btnPartner.setOpaque(false);
         btnPartner.setFocusPainted(false);
         btnPartner.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -199,11 +210,14 @@ public class  MainForm extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                pnlContent.removeAll();
-                pnlContent.add(new PartnerForm());
-                pnlContent.setLayout(null);
-                pnlContent.validate();
-                pnlContent.repaint();
+                if (db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+                {
+                    pnlContent.removeAll();
+                    pnlContent.add(new PartnerForm());
+                    pnlContent.setLayout(null);
+                    pnlContent.validate();
+                    pnlContent.repaint();                }
+
             }
 
             @Override
@@ -218,6 +232,10 @@ public class  MainForm extends JFrame {
                 pnl_PartnerMenu.setBackground(Color.LIGHT_GRAY);
             }
         });
+        if (!db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+        {
+            btnPartner.setEnabled(false);
+        }
 
         ///----------Menu_Exchange-----------------
         JPanel pnl_ExchangeMenu=new JPanel();
@@ -226,7 +244,7 @@ public class  MainForm extends JFrame {
         pnl_ExchangeMenu.setBackground(Color.LIGHT_GRAY);
         pnlMenu.add(pnl_ExchangeMenu);
 
-        JButton btnExchange = new JButton("Exchange");
+        JButton btnExchange = new JButton("Depot");
         btnExchange.setOpaque(false);
         btnExchange.setFont(new Font("Tahoma", Font.BOLD, 12));
         btnExchange.setContentAreaFilled(false);
@@ -236,19 +254,17 @@ public class  MainForm extends JFrame {
         pnl_ExchangeMenu.add(btnExchange);
 
         JLabel lblIconExchange = new JLabel("");
-        lblIconExchange.setIcon(new ImageIcon("src\\icon\\Exchange.png"));
+        lblIconExchange.setIcon(new ImageIcon("src\\icon\\Product.png"));
         lblIconExchange.setBounds(10, 16, 45, 13);
         pnl_ExchangeMenu.add(lblIconExchange);
 
         btnExchange.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                pnlContent.removeAll();
-                pnlContent.add(new ExchangeForm());
-                pnlContent.setLayout(null);
-                pnlContent.validate();
-                pnlContent.repaint();
+                if (db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+                {
+                    DepotForm dp = new DepotForm();
+                }
             }
 
             @Override
@@ -263,6 +279,10 @@ public class  MainForm extends JFrame {
                 pnl_ExchangeMenu.setBackground(Color.LIGHT_GRAY);
             }
         });
+        if (!db.checkacc("select checkacc from employee where employeeid ='"+LoginForm.UserId+"'"))
+        {
+            btnExchange.setEnabled(false);
+        }
 
         //---------------------------------------------
         JPanel panel = new JPanel();

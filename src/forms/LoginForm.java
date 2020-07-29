@@ -21,7 +21,7 @@ public class LoginForm extends JFrame {
         JLabel lblWarn;
         char originalEchoChar;
 
-        public String UserId;
+        static int UserId,storeId;
         static String userName;
 
         public LoginForm() {
@@ -116,7 +116,8 @@ public class LoginForm extends JFrame {
             DBConnection db = new DBConnection();
             if (db.check("Select username from employee where username ='"+username+"'")) {
                 if (db.check("Select password from employee where username ='"+username+"' and password ='"+password+"'")) {
-
+                    UserId = db.getID("Select employeeid from employee where username ='"+username+"'");
+                    storeId = db.getID("select storeid from employee where username ='"+username+"'");
                     userName = username;
                     tftUsername.setText(null);
                     tpPass.setText(null);

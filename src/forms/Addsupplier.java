@@ -49,11 +49,6 @@ public class Addsupplier extends JDialog {
         lbladdresssp.setBounds(10, 222, 92, 25);
         add(lbladdresssp);
 
-        JLabel lbldeptsp = new JLabel("Dept");
-        lbldeptsp.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        lbldeptsp.setBounds(10, 272, 83, 25);
-        add(lbldeptsp);
-
         textField_namesp = new JTextField();
         textField_namesp.setBounds(130, 76, 220, 19);
         add(textField_namesp);
@@ -74,27 +69,16 @@ public class Addsupplier extends JDialog {
         add(textField_addresssp);
         textField_addresssp.setColumns(10);
 
-        textField_deptsp = new JTextField();
-        textField_deptsp.setBounds(130, 276, 220, 19);
-        add(textField_deptsp);
-        textField_deptsp.setColumns(10);
 
         JButton btn_savesp = new JButton("Save");
         btn_savesp.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        btn_savesp.setBounds(197, 319, 85, 21);
+        btn_savesp.setBounds(197, 279, 85, 21);
         add(btn_savesp);
         btn_savesp.addActionListener(e -> {
             String namesupplier=textField_namesp.getText();
             String phonesupplier=textField_phonesp.getText();
             String emailsupplier=textField_emailsp.getText();
             String addresssupplier=textField_addresssp.getText();
-            Float deptsupplier= 0.0f;
-            try {
-                deptsupplier =Float.parseFloat(textField_deptsp.getText());
-            } catch (NumberFormatException numberFormatException) {
-                numberFormatException.printStackTrace();
-                JOptionPane.showMessageDialog(rootPane,"Please enter your dept supplier by number");
-            }
             supplier sp=new supplier();
             sp.setSuppliername(namesupplier);
             sp.setSupplierphonenumber(phonesupplier);
@@ -104,13 +88,12 @@ public class Addsupplier extends JDialog {
                 Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
                 String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=QLBT;user=sa;password=123456";
                 Connection conn = DriverManager.getConnection(connectionUrl);
-                String sql = "insert into supplier(suppliername,supplierphonenumber,supplieremail,supplieraddress,dept)  values(?,?,?,?,?)";
+                String sql = "insert into supplier(suppliername,supplierphonenumber,supplieremail,supplieraddress)  values(?,?,?,?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1, namesupplier);
                 preparedStatement.setString(2, phonesupplier);
                 preparedStatement.setString(3, emailsupplier);
                 preparedStatement.setString(4, addresssupplier);
-                preparedStatement.setFloat(5, deptsupplier);
                 if (!namesupplier.equals("")) {
                     if (!phonesupplier.equals("")) {
                         if (!emailsupplier.equals("")) {
@@ -123,7 +106,6 @@ public class Addsupplier extends JDialog {
                                        textField_phonesp.setText("");
                                        textField_emailsp.setText("");
                                        textField_addresssp.setText("");
-                                       textField_deptsp.setText("");
                                    }else{
                                        JOptionPane.showMessageDialog(rootPane, "Name Supplier was available");
                                    }
