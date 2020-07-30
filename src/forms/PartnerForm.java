@@ -161,6 +161,37 @@ public class PartnerForm extends JPanel {
             }
         });
 
+        JPanel pnl_btnStore = new JPanel();
+        pnl_btnStore.setBackground(new Color(230, 108, 108));
+        pnl_btnStore.setBounds(750, 10, 142, 54);
+        pnlContent.add(pnl_btnStore);
+        pnl_btnStore.setLayout(null);
+
+        JButton btnStore = new JButton("Add Store");
+        btnStore.setFont(new Font("Tahoma", Font.BOLD, 12));
+        btnStore.setFocusPainted(false);
+        btnStore.setContentAreaFilled(false);
+        btnStore.setBorderPainted(false);
+        btnStore.setBounds(0, 0, 142, 54);
+        pnl_btnStore.add(btnStore);
+        btnStore.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                FormStore fs = new FormStore();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                pnl_btnStore.setBackground(new Color(179, 70, 62));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                pnl_btnStore.setBackground(new Color(230, 108, 108));
+            }
+        });
 
         pnlContent_2 = new JPanel();
         pnlContent_2.setBounds(2, 74, 1098, 485);

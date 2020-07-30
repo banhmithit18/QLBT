@@ -190,6 +190,4 @@ public class Editsupplier extends JDialog {
         }
         return false;
     }
-
-
 }

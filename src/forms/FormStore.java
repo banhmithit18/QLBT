@@ -12,14 +12,16 @@ import java.awt.event.MouseEvent;
 import java.sql.*;
 import java.util.Vector;
 
-public class FormStore  extends JFrame {
+public class FormStore  extends JDialog {
     private JPanel panel;
     private String header[] = {"Store Id","Store Name", "Store Address", "City"};
     private DefaultTableModel tableModel = new DefaultTableModel(header, 0);
 
 
     public FormStore() {
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setBounds(100,100,600,400);
+        setModal(true);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         panel = (JPanel) getContentPane();
         panel.setLayout(null);
         JLabel lb_stmini = new JLabel("Store Mini");
@@ -266,10 +268,6 @@ public class FormStore  extends JFrame {
         }
         return false;
 }
-
-    public static void main(String[] args) {
-        FormStore formStore=new FormStore();
-    }
 }
 
 

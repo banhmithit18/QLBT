@@ -140,13 +140,13 @@ public class SellForm2 extends JFrame {
         pnlPey.add(tfDiscount);
         tfDiscount.setColumns(10);
 
-        JRadioButton rdbtnVND = new JRadioButton("vnd");
-        rdbtnVND.setBounds(251, 302, 55, 21);
-        pnlPey.add(rdbtnVND);
+//        JRadioButton rdbtnVND = new JRadioButton("vnd");
+//        rdbtnVND.setBounds(251, 302, 55, 21);
+//        pnlPey.add(rdbtnVND);
 
-        JRadioButton rdbtnPercent = new JRadioButton("%");
-        rdbtnPercent.setBounds(320, 302, 41, 21);
-        pnlPey.add(rdbtnPercent);
+//        JRadioButton rdbtnPercent = new JRadioButton("%");
+//        rdbtnPercent.setBounds(320, 302, 41, 21);
+//        pnlPey.add(rdbtnPercent);
 
         JLabel lblTotalDue = new JLabel("Total Due:");
         lblTotalDue.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -572,29 +572,27 @@ public class SellForm2 extends JFrame {
             }
 
         });
-        rdbtnPercent.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent a) {
-                rdbtnVND.setSelected(false);
-                tfDiscount.addKeyListener(new KeyAdapter() {
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                            float total = Float.parseFloat(lblTotal_Money.getText().toString());
-                            float discount = Float.parseFloat(tfDiscount.getText().toString());
-                            if(discount > 100){
-                                JOptionPane.showMessageDialog(null, "Discount must be <= 100% !!");
-                            }
-                            lblTotalDue_Money.setText(String.valueOf(total - (total * discount / 100)));
-                        }
-                    }
-                });
-            }
-        });
-        rdbtnVND.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rdbtnPercent.setSelected(false);
+//        rdbtnPercent.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent a) {
+//                rdbtnVND.setSelected(false);
+//                tfDiscount.addKeyListener(new KeyAdapter() {
+//                    @Override
+//                    public void keyPressed(KeyEvent e) {
+//                        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+//                            float total = Float.parseFloat(lblTotal_Money.getText().toString());
+//                            float discount = Float.parseFloat(tfDiscount.getText().toString());
+//                            if(discount > 100){
+//                                JOptionPane.showMessageDialog(null, "Discount must be <= 100% !!");
+//                            }
+//                            lblTotalDue_Money.setText(String.valueOf(total - (total * discount / 100)));
+//                        }
+//                    }
+//                });
+//            }
+//        });
+
+
                 tfDiscount.addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyPressed(KeyEvent e) {
@@ -609,8 +607,7 @@ public class SellForm2 extends JFrame {
                         }
                     }
                 });
-            }
-        });
+
 
         tfCusPey.addKeyListener(new KeyAdapter() {
             @Override
